@@ -1,13 +1,20 @@
 {
   "expo": {
-    "name": "chmlmovil",
-    "slug": "chmlmovil",
-    "version": "1.0.0",
+    "name": "CHML Mobile",
+    "icon": "./assets/chml_azul.png",
+    "version": "3.0.0",
+    "slug": "CHMLMobile",
+    "android": {
+      "package": "com.munichos.chmlmobile",
+      "versionCode": 14
+    },
+    "ios": {
+      "bundleIdentifier": "com.munichos.chmlmobile"
+    },
+    "privacy": "public",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/splash_chml.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -17,17 +24,8 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
-      }
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    }
+    "platforms": [
+      "android"
+    ]
   }
 }
