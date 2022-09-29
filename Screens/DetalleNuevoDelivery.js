@@ -51,8 +51,8 @@ class DetalleNuevoDelivery extends React.Component {
         this.setState({
           isLoading: false,
           items: responseJson.map((item)=>{
-            label: item.nombrerubro
-            value: item.nombrerubro
+            {label: item.nombrerubro
+            value: item.nombrerubro}
           })
         });
       });
@@ -379,12 +379,19 @@ class DetalleNuevoDelivery extends React.Component {
         <View style={styles.contenedorHorizontal}>
 
           <DropDownPicker
-            open={open}
-            value={rubros}
-            items={items}
-            setOpen={setOpen}
-            setValue={setRubros}
+            open={this.state.open}
+            value={this.state.rubros}
+            items={this.state.items}
+            setOpen={this.setOpen}
+            setValue={this.setRubros}
             multiple={true}
+            min={1}
+            containerStyle={{
+              width: WIDTH*0.6,
+            }}
+            textStyle={{
+              fontSize: 15
+            }}
           />
 
           <TouchableHighlight style={[styles.buttonDenunciar, styles.facebook, {marginBottom: 10}]} onPress={() => this._handleUpload()}>

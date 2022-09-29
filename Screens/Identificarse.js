@@ -25,7 +25,7 @@ class Identificarse extends React.Component {
       nroDoc: '',
       press: false,
       open: false,
-      value: null,
+      value: {label: 'DNI', value: 'DNI'},
       items: [
         {label: 'DNI', value: 'DNI'},
         {label: 'CUIT', value: 'CUIT'},
@@ -41,7 +41,7 @@ class Identificarse extends React.Component {
 
   setValue = (callback) => {
     this.setState({ value: callback() })
-    console.log(this.state.value)
+    //console.log(this.state.value)
   }
 
   setOpen = (open) => this.setState({ open })
