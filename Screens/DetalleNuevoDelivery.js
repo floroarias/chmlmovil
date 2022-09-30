@@ -48,12 +48,10 @@ class DetalleNuevoDelivery extends React.Component {
     return await fetch('https://delivery.chosmalal.net.ar/rubros.php')
       .then(response => response.json())
       .then(responseJson => {
+        this.setItems(responseJson)
+        //console.log(responseJson)
         this.setState({
           isLoading: false,
-          items: responseJson.map((item)=>{
-            {label: item.nombrerubro
-            value: item.nombrerubro}
-          })
         });
       });
   }
@@ -158,6 +156,7 @@ class DetalleNuevoDelivery extends React.Component {
   };
 
   _pickImage = async () => {
+    const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
     try {
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -176,6 +175,7 @@ class DetalleNuevoDelivery extends React.Component {
   };
 
   _pickCamera = async () => {
+    const [status, requestPermission] = ImagePicker.useCameraPermissions();
     try {
       let result = await ImagePicker.launchCameraAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,

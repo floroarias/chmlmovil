@@ -40,18 +40,18 @@ export class DeliveryMain extends React.Component {
             source={require('../assets/delivery.png')}
           />
           <Text style={styles.buttonText}> 
-            VER DELIVERYS
+            Ver Deliverys
           </Text>
         </View>
         </TouchableHighlight>
 
-        <TouchableHighlight style={[styles.button, styles.facebook]} onPress={() => this.props.navigation.navigate('RegistrarDelivery')}>
+        <TouchableHighlight style={[styles.button, styles.facebook]} onPress={() => this.props.navigation.navigate('DetalleNuevoDelivery')}>
         <View style={styles.buttoncontent}>
           <Image style={styles.buttonImage}
             source={require('../assets/registrar_delivery.png')}
           />
           <Text style={styles.buttonText}> 
-            REGISTRAR MI DELIVERY
+            Registrar Mi Delivery
           </Text>
         </View>
         </TouchableHighlight>

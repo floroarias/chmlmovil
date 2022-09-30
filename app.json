@@ -8,6 +8,14 @@
       "package": "com.munichos.chmlmobile",
       "versionCode": 14
     },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "CHML Mobile desea acceder a tus fotos."
+        }
+      ]
+    ],
     "ios": {
       "bundleIdentifier": "com.munichos.chmlmobile"
     },

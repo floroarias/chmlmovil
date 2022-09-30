@@ -179,6 +179,7 @@ class NuevaDenunciaDetalle extends React.Component {
   };
 
   _pickImage = async () => {
+    const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
     try {
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -196,6 +197,7 @@ class NuevaDenunciaDetalle extends React.Component {
   };
 
   _pickCamera = async () => {
+    const [status, requestPermission] = ImagePicker.useCameraPermissions();
     try {
       let result = await ImagePicker.launchCameraAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -219,7 +221,7 @@ class NuevaDenunciaDetalle extends React.Component {
       return (
         <View style = {styles.container}>
   
-          <Text style={styles.portadaText}>DENUNCIAS DEL CIUDADANO - CHML MOBILE</Text>
+          <Text style={styles.portadaText}>Denuncias del Ciudadano - CHML Mobile</Text>
           <Image 
               source = {require('../assets/error.png')} 
               imageStyle = {{resizeMode: 'contain'}}
