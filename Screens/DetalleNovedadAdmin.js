@@ -153,12 +153,12 @@ class DetalleNovedadAdmin extends React.Component {
       return (
         <View style = {styles.container}>
   
-          <Text>AGREGAR NOVEDAD - CHML MOBILE</Text>
+          <Text>Agregar Novedad - CHML Mobile</Text>
           <Image 
               source = {require('../assets/error.png')} 
               imageStyle = {{resizeMode: 'contain'}}
           />
-          <Text>DEBE ESTAR REGISTRADO Y SER ADMINISTRADOR PARA AGREGAR UNA NOVEDAD</Text>
+          <Text>Debe estar registrado y ser Administrador para agregar una novedad.</Text>
         </View>
       )
     }
@@ -174,9 +174,9 @@ class DetalleNovedadAdmin extends React.Component {
             margin:10, padding: 10, backgroundColor: 'coral', borderColor: 'blue', borderWidth: 1,
             borderRadius: 4, fontWeight: 'bold', fontSize: 10
             }}>
-            REGISTRANDO NOVEDAD...{"\n"}
-            ESTA OPERACIÓN PUEDE DEMORAR ALGUNOS MINUTOS{"\n"}
-            DEPENDIENDO DEL TAMAÑO DE LA IMAGEN Y DE SU CONEXIÓN A INTERNET.
+            Registrando novedad...{"\n"}
+            Esta operación puede demorar unos minutos, {"\n"}
+            dependiendo de la velocidad de su conexión a internet.
           </Text>
           <ActivityIndicator size= "large" color='#0000ff'/>
         </View>
@@ -220,7 +220,7 @@ class DetalleNovedadAdmin extends React.Component {
       <View style = {styles.container}>
         <ScrollView>
 
-        <Text style={styles.portadaText}>REGISTRAR NOVEDAD - CHML MOBILE</Text>
+        <Text style={styles.portadaText}>Registrar Novedad - CHML Mobile</Text>
             
         <View style={{flexDirection: 'row', justifyContent: 'center'}}>
           <Image source={require('../assets/novedades_admin.png')}

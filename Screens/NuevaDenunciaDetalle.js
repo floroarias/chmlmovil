@@ -179,7 +179,7 @@ class NuevaDenunciaDetalle extends React.Component {
   };
 
   _pickImage = async () => {
-    const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
+    //const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
     try {
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -197,7 +197,7 @@ class NuevaDenunciaDetalle extends React.Component {
   };
 
   _pickCamera = async () => {
-    const [status, requestPermission] = ImagePicker.useCameraPermissions();
+    const permiso = await ImagePicker.requestCameraPermissionsAsync()
     try {
       let result = await ImagePicker.launchCameraAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -226,7 +226,7 @@ class NuevaDenunciaDetalle extends React.Component {
               source = {require('../assets/error.png')} 
               imageStyle = {{resizeMode: 'contain'}}
           />
-          <Text style={styles.portadaText}>SE REQUIERE ESTAR REGISTRADO PARA SUBIR DENUNCIAS</Text>
+          <Text style={styles.portadaText}>Se requiere estar registrado para subir denuncias.</Text>
         </View>
       )
     }
@@ -256,9 +256,9 @@ class NuevaDenunciaDetalle extends React.Component {
             margin:10, padding: 10, backgroundColor: 'coral', borderColor: 'blue', borderWidth: 1,
             borderRadius: 4, fontWeight: 'bold', fontSize: 10
             }}>
-            SUBIENDO DENUNCIA, ESPERE POR FAVOR ...{"\n"}
-            ESTA OPERACIÓN PUEDE DEMORAR ALGUNOS MINUTOS{"\n"}
-            DEPENDIENDO DEL TAMAÑO DE LA IMAGEN Y DE SU CONEXIÓN A INTERNET
+            Subiendo denuncia, por favor espere...{"\n"}
+            Esta operación puede demorar unos minutos,{"\n"}
+            dependiendo del tamaño de la imágen y de su conexión a internet.
           </Text>
           <ActivityIndicator color="#0000ff" size="large" />
         
@@ -285,7 +285,7 @@ class NuevaDenunciaDetalle extends React.Component {
 
         <ScrollView>
 
-        <Text style={styles.portadaText}>DENUNCIA REALIZADA - CHML MOBILE</Text>
+        <Text style={styles.portadaText}>Denuncia Realizada - CHML Mobile</Text>
         
         <Image style={styles.portadaImage}
           source = {require('../assets/screen_denuncias.png')}
@@ -326,7 +326,7 @@ class NuevaDenunciaDetalle extends React.Component {
       <View style = {styles.container}>
       <ScrollView>
 
-      <Text style={styles.portadaText}>NUEVA DENUNCIA - CHML MOBILE</Text>
+      <Text style={styles.portadaText}>Nueva Denuncia - CHML Mobile</Text>
       
       {/* <Image style={styles.portadaImage}
         source = {require('../assets/screen_denuncias.png')}
@@ -384,7 +384,7 @@ class NuevaDenunciaDetalle extends React.Component {
       </View>
 
       <View style={(styles.inputContainer, {marginTop: 10})}>
-      <Ionicons name={'ios-chatboxes'} size={28} color={'rgba(255, 255, 255, 0.7)'}
+      <Ionicons name={'create'} size={28} color={'rgba(255, 255, 255, 0.7)'}
         style={styles.inputIcon} />
 
       <TextInput
@@ -425,9 +425,9 @@ class NuevaDenunciaDetalle extends React.Component {
 
       <View style={styles.contenedorHorizontal}>
       <View style={styles.checkBoxAround}>
-      <Text style={styles.buttonTextPequeño}>Denuncia Pública</Text>
+      <Text style={styles.buttonTextPequeño2}>Denuncia Pública</Text>
       <Checkbox
-        style={{alignSelf: 'center', marginTop: -15}}
+        style={{alignSelf: 'center', marginTop: 5}}
         value={this.state.tipoDenuncia == 1 ? false : true}
         onValueChange={(valor) => valor == true ? this.setState({tipoDenuncia: 2}) : this.setState({tipoDenuncia: 1})}
       />
@@ -597,6 +597,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     fontSize: 14,
     padding: 10,
+  },
+  buttonTextPequeño2: {
+    fontFamily: 'Roboto',
+    color: 'white',
+    alignSelf: 'center',
+    fontSize: 14,
   },
   portadaImage: {
     width: WIDTH * 0.9, 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TouchableHighlight, 
-Image, Dimensions, ActivityIndicator } from 'react-native';
+Image, Dimensions, ActivityIndicator, FlatList } from 'react-native';
 import { connect } from 'react-redux';
 const {width: WIDTH} = Dimensions.get('window');
 import Checkbox from 'expo-checkbox';
@@ -40,6 +40,7 @@ class AdministracionDenuncias extends React.Component {
       })
         .then(response => response.json())
         .then(responseJson => {
+          //console.log(responseJson)
           this.setState({
             isLoading: false,
             data: responseJson
@@ -71,7 +72,7 @@ class AdministracionDenuncias extends React.Component {
       uploadResult = await uploadResponse.json();
       
       //console.log(uploadResult);
-      if (uploadResult && uploadResult === 1){
+      if (uploadResult && uploadResult == 1){
         this.setState({
           resultadoSubida: true,
         })
@@ -134,10 +135,10 @@ class AdministracionDenuncias extends React.Component {
     }
 
     //Reviso que la información cargada no esté vacía.
-    if (this.state.data.length == 0 || this.state.data == 0){//El usuario es correcto, pero no hay denuncias.
+    if (this.state.data.length == 0){//El usuario es correcto, pero no hay denuncias.
       return (
 
-<View style={{margin: 20, flexDirection: 'column', alignItems: 'center'}}>
+        <View style={{margin: 20, flexDirection: 'column', alignItems: 'center'}}>
           <Image style={{
             margin: 20, width: 150, height: 150}}
             source={require('../assets/torreon_solo.png')}
@@ -219,11 +220,27 @@ class AdministracionDenuncias extends React.Component {
                   </View>
 
                   <TouchableHighlight onPress={() => this._handleUpload(item.id_denuncia, 1)}>
-                    {item.tipo_denuncia == 1 ? 'MARCAR COMO PUBLICA' : 'MARCAR COMO PRIVADA'}
+                  <Text style={{
+                      flex: 1,
+                      flexDirection: 'column',
+                      fontFamily: 'Roboto',
+                      fontSize: 13,
+                      fontWeight: 'bold',
+                      }}>
+                      {item.tipo_denuncia == 1 ? 'MARCAR COMO PUBLICA' : 'MARCAR COMO PRIVADA'}
+                    </Text>
                   </TouchableHighlight>
 
                   <TouchableHighlight onPress={() => this._handleUpload(item.id_denuncia, 2)}>
-                    {item.activa == 1 ? 'DESACTIVAR' : 'ACTIVAR'}
+                  <Text style={{
+                      flex: 1,
+                      flexDirection: 'column',
+                      fontFamily: 'Roboto',
+                      fontSize: 13,
+                      fontWeight: 'bold',
+                      }}>
+                      {item.activa == 1 ? 'DESACTIVAR' : 'ACTIVAR'}
+                    </Text>
                   </TouchableHighlight>
                 
                 </View>

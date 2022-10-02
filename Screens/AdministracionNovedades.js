@@ -103,7 +103,7 @@ class AdministracionNovedades extends React.Component {
             margin:10, padding: 10, backgroundColor: 'coral', borderColor: 'blue', borderWidth: 1,
             borderRadius: 4, fontWeight: 'bold', fontSize: 10
             }}>
-            CARGANDO LISTADO ...
+            Cargando Listado...
           </Text>
           <ActivityIndicator size= "large" color='#0000ff'/>
         </View>
@@ -128,7 +128,7 @@ class AdministracionNovedades extends React.Component {
           </TouchableHighlight>
 
           <FlatList
-            data={this.state.data}
+            data={this.state.images}
             // keyExtractor={(item, key) => item.idComercio}
             renderItem={({item, index}) =>   
                 
@@ -136,7 +136,8 @@ class AdministracionNovedades extends React.Component {
                   flex: 1,
                   flexDirection: 'row',
                   backgroundColor: index % 2 == 0 ? '#F5F5F5' : '#F5F5F5',
-                  justifyContent: 'center'
+                  justifyContent: 'center',
+                  borderWidth: 1
                   }}>{/* El item de delivery contiene una imagen con los datos del comercio
                   y dos botones (activar/desactivar y eliminar) */}
 

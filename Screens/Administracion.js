@@ -18,7 +18,7 @@ class Administracion extends React.Component {
       <View style={styles.container}>
         <ScrollView>
 
-          <Text style={styles.portadaText}>PANTALLA DE ADMINISTRACIÓN</Text>
+          <Text style={styles.portadaText}>Pantalla de Administración</Text>
           
           <Image style={styles.portadaImage}
             source = {require('../assets/usuario_admin.png')}
@@ -33,7 +33,7 @@ class Administracion extends React.Component {
             source={require('../assets/denuncias_admin.png')}
           />
           <Text style={styles.buttonText}> 
-            ADMINISTRACIÓN DE DENUNCIAS
+            Administración de Denuncias
           </Text>
         </View>
         </TouchableHighlight>
@@ -44,7 +44,7 @@ class Administracion extends React.Component {
             source={require('../assets/novedades_admin.png')}
           />
           <Text style={styles.buttonText}> 
-            ADMINISTRACIÓN DE NOVEDADES
+          Administración de Novedades
           </Text>
         </View>
         </TouchableHighlight>
@@ -55,7 +55,7 @@ class Administracion extends React.Component {
             source={require('../assets/deliverys_admin.png')}
           />
           <Text style={styles.buttonText}> 
-            ADMINISTRACIÓN DE DELIVERYS
+          Administración de Deliverys
           </Text>
         </View>
         </TouchableHighlight>
@@ -66,7 +66,7 @@ class Administracion extends React.Component {
             source={require('../assets/usuarios_admin.png')}
           />
           <Text style={styles.buttonText}> 
-            ADMINISTRACIÓN DE USUARIOS
+          Administración de Usuarios
           </Text>
         </View>
         </TouchableHighlight>

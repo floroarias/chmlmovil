@@ -33,8 +33,13 @@ class DetalleNuevoDelivery extends React.Component {
 
   setValue = (callback) => {
     this.setState({ value: callback() })
-    console.log(this.state.value)
   }
+
+  //setValue(callback) {
+  //  this.setState(state => ({
+  //    value: callback(state.value)
+  //  }));
+  //}
 
   setOpen = (open) => this.setState({ open })
 
@@ -48,8 +53,19 @@ class DetalleNuevoDelivery extends React.Component {
     return await fetch('https://delivery.chosmalal.net.ar/rubros.php')
       .then(response => response.json())
       .then(responseJson => {
-        this.setItems(responseJson)
+        let rubros = []
+        responseJson.forEach(element => {
+          const newRubro = {
+            label: element.nombrerubro,
+            value: element.nombrerubro
+          }
+          rubros.push(newRubro)
+        });
+        //console.log('rubros')
+        //console.log(rubros)
+        //console.log('responseJson')
         //console.log(responseJson)
+        this.setItems(rubros)
         this.setState({
           isLoading: false,
         });
@@ -112,7 +128,7 @@ class DetalleNuevoDelivery extends React.Component {
     }
 
     let rubrosSeleccionados = this.state.value.map((rubro) => ({
-      nombrerubro: rubro.nombrerubro
+      nombrerubro: rubro.value
     }));
 
     let rubrosSeleccionadosJSON = rubrosSeleccionados.json();
@@ -156,7 +172,7 @@ class DetalleNuevoDelivery extends React.Component {
   };
 
   _pickImage = async () => {
-    const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
+    //const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
     try {
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -175,7 +191,11 @@ class DetalleNuevoDelivery extends React.Component {
   };
 
   _pickCamera = async () => {
-    const [status, requestPermission] = ImagePicker.useCameraPermissions();
+    const permiso = await ImagePicker.requestCameraPermissionsAsync()
+    //console.log(permiso)
+    if (!permiso.granted){
+      return false
+    }
     try {
       let result = await ImagePicker.launchCameraAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -193,7 +213,6 @@ class DetalleNuevoDelivery extends React.Component {
   };
 
   render() {
-
     if (!this.props.usuarioRegistrado){
       return (
         <View style = {styles.container}>
@@ -203,7 +222,7 @@ class DetalleNuevoDelivery extends React.Component {
               source = {require('../assets/error.png')} 
               imageStyle = {{resizeMode: 'contain'}}
           />
-          <Text>DEBE ESTAR REGISTRADO PARA AGREGAR UN DELIVERY</Text>
+          <Text>Debe estar registrado para agregar un delivery</Text>
         </View>
       )
     }
@@ -262,18 +281,29 @@ class DetalleNuevoDelivery extends React.Component {
       }
     }
 
+    let imagen = this.state.imagenLogo
+      ? <Image 
+          source={{ uri: this.state.imagenLogo.uri }}
+          style={styles.denunciaImage}
+          resizeMethod={'resize'}
+          resizeMode={'contain'}
+        /> 
+      : <Image source={require('../assets/registrar_delivery.png')}
+          style={styles.denunciaImage}
+          resizeMethod={'resize'}
+          resizeMode={'contain'}
+        />
+
+    console.log('this.state.items')
+    console.log(this.state.items)
+
     return ( //Si nunca se intentó la subida, o si se intentó pero no se pudo.
       <View style = {styles.container}>
-        <ScrollView>
 
-        <Text style={styles.portadaText}>NUEVO DELIVERY - CHML MOBILE</Text>
+        <Text style={styles.portadaText}>Nuevo Delivery - CHML Mobile</Text>
             
         <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-          <Image source={require('../assets/registrar_delivery.png')}
-            style={styles.denunciaImage}
-            resizeMethod={'resize'}
-            resizeMode={'contain'}
-          />
+          {imagen}
         </View>
         
         <View style={styles.container}>
@@ -305,7 +335,7 @@ class DetalleNuevoDelivery extends React.Component {
         <KeyboardAvoidingView keyboardVerticalOffset = {120} behavior="padding">
 
         <View style={styles.inputContainer}>
-        <Ionicons name={'storefront-outline'} size={28} color={'rgba(255, 255, 255, 0.7)'}
+        <Ionicons name={'cart'} size={28} color={'rgba(255, 255, 255, 0.7)'}
           style={styles.inputIcon} />
 
         <TextInput
@@ -375,24 +405,30 @@ class DetalleNuevoDelivery extends React.Component {
         </View>
 
         </KeyboardAvoidingView>
-
-        <View style={styles.contenedorHorizontal}>
-
-          <DropDownPicker
+        
+        <View style={{margin: 10}}>
+        <DropDownPicker
             open={this.state.open}
-            value={this.state.rubros}
+            placeholder = {'Seleccione el rubro'} 
+            style={{
+              backgroundColor: "rgba(0, 0, 0, 0.35)"
+            }}
+            value={this.state.value}
             items={this.state.items}
             setOpen={this.setOpen}
-            setValue={this.setRubros}
-            multiple={true}
-            min={1}
+            setValue={this.setValue}
+            setItems={this.setItems}
             containerStyle={{
-              width: WIDTH*0.6,
+              width: WIDTH*0.9,
             }}
             textStyle={{
-              fontSize: 15
+              fontSize: 15,
+              color: 'black',
             }}
           />
+        </View>
+
+        <View style={styles.contenedorHorizontal}>
 
           <TouchableHighlight style={[styles.buttonDenunciar, styles.facebook, {marginBottom: 10}]} onPress={() => this._handleUpload()}>
             <View style={styles.buttoncontent}>
@@ -408,8 +444,6 @@ class DetalleNuevoDelivery extends React.Component {
         </View>
 
         </View>
-
-        </ScrollView>
 
       </View>
     );
@@ -599,7 +633,7 @@ const styles = StyleSheet.create({
   },
   buttonDenunciar: {
     //backgroundColor: 'red',
-    width: WIDTH*0.5,
+    width: WIDTH*0.9,
     height: 60,
     borderRadius: 5,
     borderWidth: 1,

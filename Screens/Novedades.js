@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Image, Text,FlatList } from 'react-native';
+import { Dimensions, StyleSheet, View, Image, Text, FlatList } from 'react-native';
 //import { SliderBox } from "react-native-image-slider-box";
 import { ActivityIndicator } from 'react-native';
 
@@ -18,10 +18,17 @@ export class Novedades extends React.Component {
       .then(response => response.json())
       .then(responseJson => {
         let dataSource = [];
+        console.log(responseJson)
         
-        Object.values(responseJson).forEach(item => {
-          dataSource = dataSource.concat('https://chmlmobile.chosmalal.net.ar/novedades/' + item.nombre_imagen);
+        Object.values(responseJson).forEach((item) => {
+          let imagen = 'https://chmlmobile.chosmalal.net.ar/novedades/' + item.nombre_imagen
+          let fecha = item.fecha.substring(8,10) + '/' + item.fecha.substring(5,7) + '/' + item.fecha.substring(0,4)
+          let observaciones = item.observaciones
+          let objeto = {imagen: imagen, fecha: fecha, observaciones: observaciones}
+          dataSource = dataSource.concat(objeto);
         });
+
+        console.log(dataSource)
         
         this.setState({
           isLoading: false,
@@ -49,7 +56,7 @@ export class Novedades extends React.Component {
             margin:10, padding: 10, backgroundColor: 'coral', borderColor: 'blue', borderWidth: 1,
             borderRadius: 4, fontWeight: 'bold', fontSize: 10
             }}>
-            CARGANDO NOVEDADES ...
+            Cargando Novedades...
           </Text>
           <ActivityIndicator size= "large" color='#0000ff'/>
         </View>
@@ -63,21 +70,22 @@ export class Novedades extends React.Component {
       <View style={{backgroundColor: 'lightskyblue'}}>
 
           <FlatList
-            data={this.state.data}
+            data={this.state.images}
             // keyExtractor={(item, key) => item.idComercio}
             renderItem={({item, index}) =>   
                 
                 <View style={{
                   flex: 1,
-                  flexDirection: 'row',
+                  flexDirection: 'column',
                   backgroundColor: index % 2 == 0 ? '#F5F5F5' : '#F5F5F5',
-                  justifyContent: 'center'
+                  justifyContent: 'center',
+                  borderWidth: 1
                   }}>{/* El item de delivery contiene una imagen con los datos del comercio
                   y dos botones (activar/desactivar y eliminar) */}
 
                   <View>{/* Imágen + texto descriptivo */}
-                    <Image style={{width: 100, height: 100, margin: 2}} resizeMethod='scale' resizeMode='stretch' 
-                      source={{uri: item}}
+                    <Image style={{width: Dimensions.get('window').width*0.9, height: Dimensions.get('window').width*1.3}} resizeMethod='scale' resizeMode='stretch' 
+                      source={{uri: item.imagen}}
                     />
 
                     <Text style={{
@@ -88,8 +96,8 @@ export class Novedades extends React.Component {
                       fontSize: 13,
                       fontWeight: 'bold',
                       }}>
-                        {item.observaciones !== null ? item.observaciones + '\n' : ''}
-                        {item.fecha !== null ? item.fecha + '\n' : ''}
+                        {item.fecha ? 'Fecha: ' + item.fecha + '\n' : ''}
+                        {item.observaciones ? 'Comentarios: ' + item.observaciones + '\n' : ''}
                     </Text>
                   </View>
 

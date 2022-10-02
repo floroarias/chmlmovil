@@ -26,6 +26,7 @@ class TodasLasDenuncias extends React.Component {
       })
         .then(response => response.json())
         .then(responseJson => {
+          console.log(responseJson)
           this.setState({
             isLoading: false,
             data: responseJson
@@ -53,12 +54,12 @@ class TodasLasDenuncias extends React.Component {
       return (
         <View style = {styles.container}>
   
-          <Text>LISTADO DE DENUNCIAS PÚBLICAS DE LOS CIUDADANOS - CHML MOBILE</Text>
+          <Text>Listado de Denuncias Públicas de los Ciudadanos - CHML Mobile</Text>
           <Image 
               source = {require('../assets/error.png')} 
               imageStyle = {{resizeMode: 'contain'}}
           />
-          <Text>DEBE ESTAR REGISTRADO PARA VER ESTAS DENUNCIAS</Text>
+          <Text>Debe estar registrado para ver estas denuncias.</Text>
         </View>
       )
     }
@@ -74,7 +75,7 @@ class TodasLasDenuncias extends React.Component {
             margin:10, padding: 10, backgroundColor: 'coral', borderColor: 'blue', borderWidth: 1,
             borderRadius: 4, fontWeight: 'bold', fontSize: 10
             }}>
-            CARGANDO DENUNCIAS ...
+            Cargando denuncias...
           </Text>
           <ActivityIndicator size= "large" color='#0000ff'/>
         </View>
@@ -83,7 +84,7 @@ class TodasLasDenuncias extends React.Component {
     }
 
     //Reviso que la información cargada no esté vacía.
-    if (this.state.data.length == 0 || this.state.data == 0){//El usuario es correcto, pero no hay denuncias.
+    if (this.state.data.length == 0){//El usuario es correcto, pero no hay denuncias.
         return (
           <View style={{margin: 20, flexDirection: 'column', alignItems: 'center'}}>
             <Image style={{
@@ -96,7 +97,7 @@ class TodasLasDenuncias extends React.Component {
               margin:10, padding: 10, backgroundColor: 'coral', borderColor: 'blue', borderWidth: 1,
               borderRadius: 4, fontWeight: 'bold', fontSize: 10
               }}>
-              NINGÚN USUARIO HA HECHO DENUNCIAS PÚBLICAS AÚN.
+              Ningún usuario ha hecho denuncias públicas aún.
             </Text>
           </View>
         );

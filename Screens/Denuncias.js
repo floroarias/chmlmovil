@@ -26,7 +26,7 @@ class Denuncias extends React.Component {
             source={require('../assets/denuncias_admin.png')}
           />
           <Text style={styles.buttonText}> 
-            TODAS LAS DENUNCIAS
+            Todas las Denuncias
           </Text>
         </View>
         </TouchableHighlight>
@@ -36,7 +36,7 @@ class Denuncias extends React.Component {
       <View style={styles.container}>
         <ScrollView>
 
-          <Text style={styles.portadaText}>DENUNCIAS DEL CIUDADANO CHOSMALENSE</Text>
+          <Text style={styles.portadaText}>Denuncias del Ciudadano Chosmalense</Text>
           <Text style={styles.portadaText}>Las denuncias privadas sólo podrán ser vistas por Ud. y por los Administradores del Municipio</Text>
           
           <Image style={styles.portadaImage}
@@ -52,7 +52,7 @@ class Denuncias extends React.Component {
             source={require('../assets/logo_denuncia.png')}
           />
           <Text style={styles.buttonText}> 
-            NUEVA DENUNCIA
+            Nueva Denuncia
           </Text>
         </View>
         </TouchableHighlight>
@@ -63,7 +63,7 @@ class Denuncias extends React.Component {
             source={require('../assets/denuncias_listado.png')}
           />
           <Text style={styles.buttonText}> 
-            VER MIS DENUNCIAS
+            Ver Mis Denuncias
           </Text>
         </View>
         </TouchableHighlight>
@@ -74,7 +74,7 @@ class Denuncias extends React.Component {
             source={require('../assets/denuncias_publicas.png')}
           />
           <Text style={styles.buttonText}> 
-            VER DENUNCIAS PUBLICAS
+            Ver Denuncias Públicas
           </Text>
         </View>
         </TouchableHighlight>
