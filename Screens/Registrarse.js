@@ -134,7 +134,7 @@ export default class Registrarse extends React.Component {
             margin:10, padding: 10, backgroundColor: 'coral', borderColor: 'blue', borderWidth: 1,
             borderRadius: 4, fontWeight: 'bold', fontSize: 10
             }}>
-            REGISTRANDO USUARIO, ESPERE POR FAVOR ...
+            Registrando usuario, espere por favor...
           </Text>
           <ActivityIndicator color="#0000ff" size="large" />
         
@@ -150,8 +150,8 @@ export default class Registrarse extends React.Component {
         
         <View style = {styles.container}>
         <Text style={styles.portadaText}>
-          USUARIO REGISTRADO - CHML MOBILE{"\n"}
-          REVISE SU CORREO PARA CONFIRMARLO Y PODER INICIAR SESIÓN.{"\n"}
+          Usuario Registrado Exitosamente - CHML Mobile{"\n"}
+          Revise su correo para realizar la confirmación y poder iniciar sesión.{"\n"}
         </Text>
         
         <Image style={styles.portadaImage}
@@ -163,7 +163,7 @@ export default class Registrarse extends React.Component {
         
         <View style = {styles.container}>
         <Text style={styles.portadaText}>
-          DATOS DE REGISTRO:{"\n"}{"\n"}
+          Datos de Registro:{"\n"}{"\n"}
           Nombre: {this.state.nombres} {this.state.apellidos}{"\n"}
           Mail: {this.state.mail}{"\n"}
         </Text>
@@ -193,7 +193,7 @@ export default class Registrarse extends React.Component {
 
         <ScrollView>
 
-        <Text style={styles.portadaText}>REGISTRO DE USUARIOS - CHML MOBILE</Text>
+        <Text style={styles.portadaText}>Registro de Usuarios - CHML Mobile</Text>
         
         <Image style={styles.portadaImage}
         source = {require('../assets/logo_chml_web.png')}

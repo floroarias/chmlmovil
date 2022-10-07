@@ -1,21 +1,23 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableHighlight, Image, FlatList } from 'react-native';
+import { StyleSheet, Text, View, TouchableHighlight, Image, FlatList, Dimensions } from 'react-native';
 import { ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import Checkbox from 'expo-checkbox';
+const {width: WIDTH} = Dimensions.get('window');
 
 class AdministracionUsuarios extends React.Component {
   state = {
     isLoading: true,
     data: [],
-    filtroAdmins: false,
-    filtroComunes: false,
+    filtroAdmins: true,
+    filtroComunes: true,
   } 
 
   async componentDidMount() {
-    return await fetch('https://chmlmobile.chosmalal.net.ar/apiusuarios/v1/usuarioslistado.php')
+    return await fetch('https://chmlmobile.chosmalal.net.ar/apiusuarios/v3/usuarioslistado.php')
       .then(response => response.json())
       .then(responseJson => {
+        console.log(responseJson)
         this.setState({
           isLoading: false,
           data: responseJson
@@ -94,7 +96,7 @@ class AdministracionUsuarios extends React.Component {
             margin:10, padding: 10, backgroundColor: 'coral', borderColor: 'blue', borderWidth: 1,
             borderRadius: 4, fontWeight: 'bold', fontSize: 10
             }}>
-            CARGANDO USUARIOS ...
+            Cargando Usuarios...
           </Text>
           <ActivityIndicator size= "large" color='#0000ff'/>
         </View>
@@ -103,7 +105,7 @@ class AdministracionUsuarios extends React.Component {
     }
 
     //Reviso que la información cargada no esté vacía.
-    if (this.state.data.length == 0 || this.state.data == 0){//El usuario es correcto, pero no hay denuncias.
+    if (this.state.data.length == 0){//
       return (
         <View style={{margin: 20, flexDirection: 'column', alignItems: 'center'}}>
           <Image style={{
@@ -116,7 +118,7 @@ class AdministracionUsuarios extends React.Component {
             margin:10, padding: 10, backgroundColor: 'coral', borderColor: 'blue', borderWidth: 1,
             borderRadius: 4, fontWeight: 'bold', fontSize: 10
             }}>
-            NO HAY USUARIOS QUE MOSTRAR AQUÍ.
+            No hay usuarios que mostrar.
           </Text>
         </View>
       );
@@ -139,19 +141,19 @@ class AdministracionUsuarios extends React.Component {
           </TouchableHighlight>
 
           <View style={styles.checkBoxAround}>
-            <Text style={styles.buttonTextPequeño}>Administradores</Text>
+            <Text style={styles.buttonTextPequeño2}>Administradores</Text>
             <Checkbox
-              style={{alignSelf: 'center', marginTop: -15}}
-              value={this.state.filtroAdmins ? true : false}
+              style={{alignSelf: 'center', marginTop: 5}}
+              value={this.state.filtroAdmins}
               onValueChange={(valor) => this.setState({filtroAdmins: valor})}
             />
           </View>
 
           <View style={styles.checkBoxAround}>
-            <Text style={styles.buttonTextPequeño}>Usuarios Comunes</Text>
+            <Text style={styles.buttonTextPequeño2}>Usuarios Comunes</Text>
             <Checkbox
-              style={{alignSelf: 'center', marginTop: -15}}
-              value={this.state.filtroComunes ? true : false}
+              style={{alignSelf: 'center', marginTop: 5}}
+              value={this.state.filtroComunes}
               onValueChange={(valor) => this.setState({filtroComunes: valor})}
             />
           </View>
@@ -165,13 +167,14 @@ class AdministracionUsuarios extends React.Component {
                   flex: 1,
                   flexDirection: 'row',
                   backgroundColor: index % 2 == 0 ? '#F5F5F5' : '#F5F5F5',
-                  justifyContent: 'center'
+                  justifyContent: 'center',
+                  borderWidth: 1
                   }}>{/* El item de usuario contiene los datos del usuario
                   y dos botones (editar y eliminar) */}
 
                   <View>{/* texto descriptivo */}
                     <Image style={{width: 100, height: 100, margin: 2}} resizeMethod='scale' resizeMode='stretch' 
-                      source={item.perfilusuario === 2 ? require('../assets/usuario_admin.png') : item.confirmado === 1 ? require('../assets/logueado.png'): require('../assets/avatar.png')}
+                      source={item.perfil_usuario == 2 ? require('../assets/usuario_admin.png') : item.confirmado == 1 ? require('../assets/logueado.png'): require('../assets/avatar.png')}
                     />
 
                     <Text style={{
@@ -184,8 +187,9 @@ class AdministracionUsuarios extends React.Component {
                       }}>
                       Mail: {item.mail}{"\n"}
                       Nombre: {item.nombre + ' ' + item.apellido}{"\n"}
-                      Fecha de Alta.: {item.timestamp} - Confirmado: {item.confirmado === 1 ? 'Sí' : 'No'}{"\n"}
-                      Tipo de Usuario: {item.perfilusuario === 2 ? 'Administrador' : 'Usuario Común'}
+                      Fecha de Alta.: {item.timestamp}{"\n"}
+                      Confirmado: {item.confirmado == 1 ? 'Sí' : 'No'}{"\n"}
+                      Tipo de Usuario: {item.perfil_usuario == 2 ? 'Administrador' : 'Usuario Común'}
                     </Text>
                   </View>
 
@@ -258,5 +262,21 @@ const styles = StyleSheet.create({
     width: 40, 
     height: 40,
     alignSelf: 'center',
+  },
+  checkBoxAround: {
+    width: WIDTH*0.38,
+    height: 60,
+    borderRadius: 5,
+    borderWidth: 1,
+    //marginTop: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#155293',
+  },
+  buttonTextPequeño2: {
+    fontFamily: 'Roboto',
+    color: 'white',
+    alignSelf: 'center',
+    fontSize: 14,
   },
 });

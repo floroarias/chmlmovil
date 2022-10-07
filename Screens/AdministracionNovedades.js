@@ -21,7 +21,7 @@ class AdministracionNovedades extends React.Component {
         Object.values(responseJson).forEach(item => {
           dataSource = dataSource.concat('https://chmlmobile.chosmalal.net.ar/novedades/' + item.nombre_imagen);
         });
-        
+        //console.log(dataSource)
         this.setState({
           isLoading: false,
           images: dataSource
@@ -129,20 +129,17 @@ class AdministracionNovedades extends React.Component {
 
           <FlatList
             data={this.state.images}
-            // keyExtractor={(item, key) => item.idComercio}
             renderItem={({item, index}) =>   
-                
                 <View style={{
                   flex: 1,
-                  flexDirection: 'row',
+                  flexDirection: 'column',
                   backgroundColor: index % 2 == 0 ? '#F5F5F5' : '#F5F5F5',
                   justifyContent: 'center',
                   borderWidth: 1
-                  }}>{/* El item de delivery contiene una imagen con los datos del comercio
-                  y dos botones (activar/desactivar y eliminar) */}
+                  }}>
 
-                  <View>{/* Imágen + texto descriptivo */}
-                    <Image style={{width: 100, height: 100, margin: 2}} resizeMethod='scale' resizeMode='stretch' 
+                  <View>
+                    <Image style={{width: 200, height: 250, margin: 2}} resizeMethod='scale' resizeMode='stretch' 
                       source={{uri: item}}
                     />
 
@@ -154,8 +151,8 @@ class AdministracionNovedades extends React.Component {
                       fontSize: 13,
                       fontWeight: 'bold',
                       }}>
-                        {item.observaciones !== null ? item.observaciones + '\n' : ''}
-                        {item.fecha !== null ? item.fecha + '\n' : ''}
+                        {item.fecha ? 'Fecha: ' + item.fecha + '\n' : ''}
+                        {item.observaciones ? 'Comentarios: ' + item.observaciones + '\n' : ''}
                     </Text>
                   </View>
 
@@ -260,5 +257,23 @@ const styles = StyleSheet.create({
     width: WIDTH * 0.9, 
     height: 100,
     alignSelf: 'center',
+  },
+  contenedorHorizontal:{
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: WIDTH * 0.90, 
+    height: 130,
+    justifyContent: "space-between",
+    marginBottom: -10,
+    marginTop: -20,
+    //borderRadius: 10,
+  },
+  buttonHorizontal: {
+    //backgroundColor: 'red',
+    width: WIDTH*0.4,
+    height: 60,
+    borderRadius: 5,
+    borderWidth: 1,
+    marginTop: 10,
   },
 });

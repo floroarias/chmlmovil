@@ -1,111 +1,249 @@
 //Esta pantalla se usa tanto para editar como para agregar un usuario nuevo.
 //Solo usuarios de tipo Admin.
 import React from 'react';
-import { StyleSheet, Text, View, TouchableHighlight, Image, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, TouchableHighlight, TextInput, TouchableOpacity,
+  Image, Dimensions, ScrollView, KeyboardAvoidingView } from 'react-native';
 import { ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 const {width: WIDTH} = Dimensions.get('window');
+import Checkbox from 'expo-checkbox';
 
 class DetalleUsuarioAdmin extends React.Component {
-    state = {
-      isLoading: true,
-    } 
-
-  async componentDidMount() {
-    if (this.props.usuarioRegistrado){
-      var formData = new FormData()
-      formData.append('perfil_usuario', this.props.usuario.perfilUsuario)
-      formData.append('id_usuario', this.props.usuario.idUsuario)
-      formData.append('jwt', this.props.usuario.jwt)
-
-      return await fetch('https://chmlmobile.chosmalal.net.ar/apiusuarios/v1/modificar_eliminar_usuario.php', {
-        method: 'POST',
-        headers:{
-          'Accept':'application/json',
-          'Content-Type': 'multipart/form-data'
-        },
-        body: formData
-      })
-        .then(response => response.json())
-        .then(responseJson => {
-          this.setState({
-            isLoading: false,
-            data: responseJson
-          });
-        })
-        .catch((err) => {
-          //console.log("ERROR:")
-          //console.log(err)
-          alert('Error en los datos, intente nuevamente. Asegúrese de estar conectado a internet.')
-        })
-
-    }else{//Usuario no registrado.
-      this.setState({
-        isLoading: false,
-      });
-    }
-  }
+  state = {
+    showPass: true,
+    press: false,
+    uploading: false,
+    nombres: '',
+    apellidos: '',
+    mail:'',
+    contrasena1: '',
+    contrasena2: '',
+    resultadoSubida: false,
+    usuarioAdmin: false,
+  } 
 
   static navigationOptions = {
     title: 'Detalle de Usuario - CHML Mobile', 
   };
 
-  render() {
-
-    if (this.state.isLoading) {
-      return (
-        <View style={{margin: 20, flexDirection: 'column', alignItems: 'center'}}>
-          <Image style={{
-            margin: 20, width: 60, height: 60}}
-            source={require('../assets/usuarios_admin.png')}
-          />
-          <Text style={{
-            margin:10, padding: 10, backgroundColor: 'coral', borderColor: 'blue', borderWidth: 1,
-            borderRadius: 4, fontWeight: 'bold', fontSize: 10
-            }}>
-            Cargando datos del usuario ...
-          </Text>
-          <ActivityIndicator size= "large" color='#0000ff'/>
-        </View>
-
-      );
+  //Usar la siguiente función en el manejo del botón GuardarUsuario.
+  _handleUploadUser = async () => {
+    //En primer lugar, reviso que se hayan completado todos los datos.
+    if (!this.validarDatos){
+      alert('Error. Revise que todos los campos estén completos y sean correctos e intente nuevamente.')
+      return false
     }
 
-    /* Este método sólo se ejecuta si isLoading es falso.
-    Esto significa que se terminó de cargar la información. */
+    let uploadResponse, uploadResult;
+
+    try {
+      this.setState({
+        uploading: true
+      });
+
+      uploadResponse = await this.uploadUserAsync();
+      uploadResult = uploadResponse.json();
+      if (uploadResult && uploadResult === 5){
+        this.setState({
+          resultadoSubida: true,
+        })
+      }else{
+        alert('Error, intente nuevamente. Asegúrese de estar conectado a internet.')
+      }
+    } catch (e) {
+      alert('Error. Asegúrese de estar conectado a internet y de que todos los datos estén cargados.');
+    } finally {
+      this.setState({
+        uploading: false
+      });
+    }
+  };
+
+  async uploadUserAsync() {
+    let apiUrl = 'https://chmlmobile.chosmalal.net.ar/apiusuarios/v2/registrar_usuario.php';
+
+    let formData = new FormData();
+    formData.append('mail', this.state.mail)
+    formData.append('password', this.state.contrasena1)
+    formData.append('apellidos', this.state.apellidos)
+    formData.append('nombres', this.state.nombres)
+  
+    let options = {
+      method: 'POST',
+      body: formData,
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'multipart/form-data',
+      },
+    };
+
+    return fetch(apiUrl, options);
+  }
+
+  validarDatos = () => {
+    let expresionRegularNombreApellido = /^[a-zA-Z]{2}[a-zA-Z]*$/;
+    let expresionRegularMail = /^.+@.+\.[a-zA-Z]+$/;
+
+    let nombreCorrecto = expresionRegularNombreApellido.exec(this.state.nombres)
+    let apellidoCorrecto = expresionRegularNombreApellido.exec(this.state.apellidos)
+    let mailCorrecto = expresionRegularMail.exec(this.state.mail)
+    let passwordCorrecto = ( this.state.contrasena1.length > 3 && (this.state.contrasena1 == this.state.contrasena2) )
+    
+    return (nombreCorrecto && apellidoCorrecto && mailCorrecto && passwordCorrecto)
+  }
+
+  showPass = () => {
+    if (this.state.press == false) {
+      this.setState({ showPass: false, press: true })
+    } else {
+      this.setState({ showPass: true, press: false })
+    }
+  }
+
+  guardarUsuario = async () => {
+    var formData = new FormData()
+    formData.append('mail', this.state.mail)
+    formData.append('password', this.state.contrasena1)
+    formData.append('apellidos', this.state.apellidos)
+    formData.append('nombres', this.state.nombres)
+    return await fetch('https://chmlmobile.chosmalal.net.ar/apiusuarios/v2/registrar_usuario.php', {
+      method: 'POST',
+      headers:{
+        'Accept':'application/json',
+        'Content-Type': 'multipart/form-data'
+      },
+      body: formData
+    })
+    .then((resp) =>
+      resp.json()
+    )
+    .catch((err) =>
+      console.log(err)
+    )
+  }
+
+  render() {
     return (
       <View style={{backgroundColor: '#155293'}}>
 
-        <View style={{
-          flex: 1,
-          flexDirection: 'row',
-          backgroundColor: index % 2 == 0 ? '#273BCF' : '#27CF73',
-          justifyContent: 'center'
-        }}> 
+      <View style = {styles.container}>
 
-          <Image style={{width: 100, height: 100, margin: 2}} resizeMethod='scale' resizeMode='stretch' 
-            source={require('../assets/usuario_admin.png')}
+        <ScrollView>
+
+        <Text style={styles.portadaText}>Registro de Usuarios - CHML Mobile</Text>
+        <Text style={styles.portadaText}>Usuario Administrador</Text>
+        
+        <Image style={styles.portadaImage}
+        source = {require('../assets/usuario_admin.png')}
+        resizeMethod={'resize'}
+        resizeMode={'contain'} 
+        //imageStyle = {{resizeMode: 'center'}}
+        />
+
+        <KeyboardAvoidingView>
+
+        <View style={styles.inputContainer}>
+          <Ionicons name={'ios-person'} size={28} color={'rgba(255, 255, 255, 0.7)'}
+            style={styles.inputIcon} />
+
+          <TextInput
+            onChangeText={(nombres) => this.setState({nombres})}
+            style = {styles.input}
+            placeholder = {'Nombres'} 
+            ref='nombres'
+            returnKeyType='next'
+            placeholderTextColor = {'rgba(255, 255, 255, 0.7)'}
+            underlineColorAndroid = 'transparent'
+            value={this.state.nombres}
+          />
+        </View>
+
+        <View style={styles.inputContainer}> 
+          <Ionicons name={'ios-person'} size={28} color={'rgba(255, 255, 255, 0.7)'}
+            style={styles.inputIcon} />
+
+          <TextInput
+            onChangeText={(apellidos) => this.setState({apellidos})}
+            style = {styles.input}
+            placeholder = {'Apellidos'} 
+            ref='apellidos'
+            returnKeyType='next'
+            placeholderTextColor = {'rgba(255, 255, 255, 0.7)'}
+            underlineColorAndroid = 'transparent'
+            value={this.state.apellidos}
+          />
+        </View>
+        
+        <View style={styles.inputContainer}>
+          <Ionicons name={'ios-mail'} size={28} color={'rgba(255, 255, 255, 0.7)'}
+            style={styles.inputIcon} />
+
+          <TextInput
+            onChangeText={(mail) => this.setState({mail})}
+            style = {styles.input}
+            placeholder = {'Mail'} 
+            ref='mail'
+            returnKeyType='next'
+            placeholderTextColor = {'rgba(255, 255, 255, 0.7)'}
+            underlineColorAndroid = 'transparent'
+            value={this.state.mail}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Ionicons name={'ios-lock'} size={28} color={'rgba(255, 255, 255, 0.7)'}
+            style={styles.inputIcon} />
+
+          <TextInput
+            onChangeText={(contrasena1) => this.setState({contrasena1})}
+            style = {styles.input}
+            placeholder = {'Password'}
+            ref='contrasena1'
+            returnKeyType='next'
+            secureTextEntry = {this.state.showPass} 
+            placeholderTextColor = {'rgba(255, 255, 255, 0.7)'}
+            underlineColorAndroid = 'transparent'
+            value={this.state.contrasena1}
+          />
+          
+          <TouchableOpacity style={styles.btnEye} onPress={this.showPass.bind(this)}>
+            <Ionicons name={this.state.press == false ? 'ios-eye' : 'ios-eye-off'} 
+              size={28} color={'rgba(255, 255, 255, 0.7)'}/>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Ionicons name={'ios-lock'} size={28} color={'rgba(255, 255, 255, 0.7)'}
+            style={styles.inputIcon} />
+
+          <TextInput
+            onChangeText={(contrasena2) => this.setState({contrasena2})}
+            style = {styles.input}
+            placeholder = {'Password Nuevamente'}
+            ref='contrasena2'
+            returnKeyType='next'
+            secureTextEntry = {this.state.showPass} 
+            placeholderTextColor = {'rgba(255, 255, 255, 0.7)'}
+            underlineColorAndroid = 'transparent'
+            value={this.state.contrasena2}
           />
 
-          <Text style={{
-            flex: 1,
-            flexDirection: 'column',
-            fontFamily: 'Roboto',
-            fontSize: 13,
-            fontWeight: 'bold',
-          }}>
-            DATOS DEL USUARIO:{"\n"}
-            Mail: {item.mail}{"\n"}
-            Nombre: {item.nombre + ' ' + item.apellido}{"\n"}
-            Fecha de Alta.: {item.timestamp} - Confirmado: {item.confirmado === 1 ? 'Sí' : 'No'}{"\n"}
-            Tipo de Usuario: {item.perfilusuario === 2 ? 'Administrador' : 'Usuario Común'}
-          </Text>
+          <TouchableOpacity style={styles.btnEye} onPress={this.showPass.bind(this)}>
+            <Ionicons name={this.state.press == false ? 'ios-eye' : 'ios-eye-off'} 
+              size={28} color={'rgba(255, 255, 255, 0.7)'}/>
+          </TouchableOpacity>
+        </View>
+        
+        </KeyboardAvoidingView>
+
+        </ScrollView>
                 
         </View>
 
         <View style={[styles.contenedorHorizontal, {marginBottom: -20}]}>
         
-          <TouchableHighlight style={[styles.buttonHorizontal, styles.facebook]} onPress={this._pickImage}>
+          <TouchableHighlight style={[styles.buttonHorizontal, styles.facebook]} onPress={() => this.props.navigation.navigate('AdministracionUsuarios')}>
             <View style={styles.buttoncontent}>
               <Image style={styles.buttonImage}
                 source={require('../assets/cancel.png')}
@@ -116,7 +254,16 @@ class DetalleUsuarioAdmin extends React.Component {
             </View>
           </TouchableHighlight>
 
-          <TouchableHighlight style={[styles.buttonHorizontal, styles.facebook]} onPress={this._pickCamera}>
+          <View style={styles.checkBoxAround}>
+            <Text style={styles.buttonTextPequeño2}>Administrador</Text>
+            <Checkbox
+              style={{alignSelf: 'center', marginTop: 5}}
+              value={this.state.usuarioAdmin}
+              onValueChange={(valor) => this.setState({usuarioAdmin: valor})}
+            />
+          </View>
+
+          <TouchableHighlight style={[styles.buttonHorizontal, styles.facebook]} onPress={() => this._handleUploadUser()}>
             <View style={styles.buttoncontent}>
               <Image style={styles.buttonImage}
                 source={require('../assets/ok.png')}
@@ -187,5 +334,21 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 1,
     marginTop: 10,
+  },
+  checkBoxAround: {
+    width: WIDTH*0.38,
+    height: 60,
+    borderRadius: 5,
+    borderWidth: 1,
+    //marginTop: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#155293',
+  },
+  buttonTextPequeño2: {
+    fontFamily: 'Roboto',
+    color: 'white',
+    alignSelf: 'center',
+    fontSize: 14,
   },
 });

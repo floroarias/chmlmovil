@@ -40,7 +40,7 @@ class AdministracionDenuncias extends React.Component {
       })
         .then(response => response.json())
         .then(responseJson => {
-          //console.log(responseJson)
+          console.log(responseJson)
           this.setState({
             isLoading: false,
             data: responseJson
@@ -48,7 +48,7 @@ class AdministracionDenuncias extends React.Component {
         })
         .catch((err) => {
           //console.log("ERROR:")
-          //console.log(err)
+          console.log(err)
           alert('Error en los datos, intente nuevamente. Asegúrese de estar conectado a internet.')
         })
 
@@ -158,28 +158,50 @@ class AdministracionDenuncias extends React.Component {
     /* Este método sólo se ejecuta si isLoading es falso.
     Esto significa que se terminó de cargar la información. */
     return (
-      <View style={{backgroundColor: '#155293'}}>
+      <View style={styles.container}>
         
-        <View style={styles.container}> {/* Inicio de los Checkboxes de cabecera. */}
-          <View style={styles.section}>
-            <Checkbox style={styles.checkbox} value={this.state.filtroPublicas} onValueChange={(valor) => this.setState({filtroPublicas: valor})} />
-            <Text>Públicas</Text>
-          </View>
-          <View style={styles.section}>
-            <Checkbox style={styles.checkbox} value={this.state.filtroPrivadas} onValueChange={(valor) => this.setState({filtroPrivadas: valor})} />
-            <Text>Privadas</Text>
-          </View>
-          <View style={styles.section}>
-            <Checkbox style={styles.checkbox} value={this.state.filtroActivas} onValueChange={(valor) => this.setState({filtroActivas: valor})} />
-            <Text>Activas</Text>
-          </View>
-          <View style={styles.section}>
-            <Checkbox style={styles.checkbox} value={this.state.filtroInactivas} onValueChange={(valor) => this.setState({filtroInactivas: valor})} />
-            <Text>Inactivas</Text>
-          </View>
-        </View> {/* Fin de los Checkboxes de cabecera. */}
+        <View style={styles.contenedorHorizontal}>
 
-          <FlatList
+          <View style={styles.checkBoxAround}>
+            <Text style={styles.buttonTextPequeño2}>Públicas</Text>
+            <Checkbox
+              style={{alignSelf: 'center', marginTop: 5}}
+              value={this.state.filtroPublicas}
+              onValueChange={(valor) => this.setState({filtroPublicas: valor})}
+            />
+          </View>
+
+
+          <View style={styles.checkBoxAround}>
+            <Text style={styles.buttonTextPequeño2}>Privadas</Text>
+            <Checkbox
+              style={{alignSelf: 'center', marginTop: 5}}
+              value={this.state.filtroPrivadas}
+              onValueChange={(valor) => this.setState({filtroPrivadas: valor})}
+            />
+          </View>
+        
+          <View style={styles.checkBoxAround}>
+            <Text style={styles.buttonTextPequeño2}>Activas</Text>
+            <Checkbox
+              style={{alignSelf: 'center', marginTop: 5}}
+              value={this.state.filtroActivas}
+              onValueChange={(valor) => this.setState({filtroActivas: valor})}
+            />
+          </View>
+        
+          <View style={styles.checkBoxAround}>
+            <Text style={styles.buttonTextPequeño2}>Inactivas</Text>
+            <Checkbox
+              style={{alignSelf: 'center', marginTop: 5}}
+              value={this.state.filtroInactivas}
+              onValueChange={(valor) => this.setState({filtroInactivas: valor})}
+            />
+          </View>
+        
+        </View>
+
+        <FlatList
             data={this.state.data}
 
             // keyExtractor={(item, key) => item.idComercio}
@@ -196,9 +218,9 @@ class AdministracionDenuncias extends React.Component {
                     justifyContent: 'center'
                   }}>
 
-                  <View>{/* Imágen + texto descriptivo */}
+                  <View>
 
-                    <Image style={{width: 150, height: 150, margin: 2}} resizeMethod='scale' resizeMode='stretch' 
+                    <Image style={{width: 250, height: 250, margin: 2}} resizeMethod='scale' resizeMode='stretch' 
                       source={{uri: 'https://denuncias.chosmalal.net.ar/imagenes/' + item.imagen}}
                     />
 
@@ -209,7 +231,7 @@ class AdministracionDenuncias extends React.Component {
                       fontSize: 13,
                       fontWeight: 'bold',
                       }}>
-                      Tipo de Denuncia: {item.tipo_denuncia == 1 ? 'PRIVADA' : 'PUBLICA'}{"\n"}
+                      Tipo de Denuncia: {item.tipo_denuncia == '1' ? 'PRIVADA' : 'PUBLICA'}{"\n"}
                       Descripción: {item.descripcion}{"\n"}
                       Fecha:
                       {' ' + item.fecha.substring(8,10) + '/' +
@@ -219,6 +241,7 @@ class AdministracionDenuncias extends React.Component {
 
                   </View>
 
+                  <View style={styles.checkBoxAround}>
                   <TouchableHighlight onPress={() => this._handleUpload(item.id_denuncia, 1)}>
                   <Text style={{
                       flex: 1,
@@ -227,10 +250,12 @@ class AdministracionDenuncias extends React.Component {
                       fontSize: 13,
                       fontWeight: 'bold',
                       }}>
-                      {item.tipo_denuncia == 1 ? 'MARCAR COMO PUBLICA' : 'MARCAR COMO PRIVADA'}
-                    </Text>
+                      {item.tipo_denuncia == '1' ? 'MARCAR COMO PUBLICA' : 'MARCAR COMO PRIVADA'}
+                  </Text>
                   </TouchableHighlight>
-
+                  </View>
+                  
+                  <View style={styles.checkBoxAround}>
                   <TouchableHighlight onPress={() => this._handleUpload(item.id_denuncia, 2)}>
                   <Text style={{
                       flex: 1,
@@ -239,9 +264,10 @@ class AdministracionDenuncias extends React.Component {
                       fontSize: 13,
                       fontWeight: 'bold',
                       }}>
-                      {item.activa == 1 ? 'DESACTIVAR' : 'ACTIVAR'}
-                    </Text>
+                      {item.activa == '1' ? 'DESACTIVAR' : 'ACTIVAR'}
+                  </Text>
                   </TouchableHighlight>
+                  </View>
                 
                 </View>
               </TouchableHighlight> //Fin del item
@@ -332,5 +358,39 @@ const styles = StyleSheet.create({
     width: WIDTH * 0.9, 
     height: 100,
     alignSelf: 'center',
+  },
+  checkBoxAround: {
+    width: WIDTH*0.38,
+    height: 60,
+    borderRadius: 5,
+    borderWidth: 1,
+    //marginTop: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#155293',
+  },
+  buttonTextPequeño2: {
+    fontFamily: 'Roboto',
+    color: 'white',
+    alignSelf: 'center',
+    fontSize: 14,
+  },
+  contenedorHorizontal:{
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: WIDTH * 0.90, 
+    height: 130,
+    justifyContent: "space-between",
+    marginBottom: -10,
+    marginTop: -20,
+    //borderRadius: 10,
+  },
+  buttonHorizontal: {
+    //backgroundColor: 'red',
+    width: WIDTH*0.4,
+    height: 60,
+    borderRadius: 5,
+    borderWidth: 1,
+    marginTop: 10,
   },
 });

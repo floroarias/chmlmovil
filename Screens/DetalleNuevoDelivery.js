@@ -294,8 +294,8 @@ class DetalleNuevoDelivery extends React.Component {
           resizeMode={'contain'}
         />
 
-    console.log('this.state.items')
-    console.log(this.state.items)
+    //console.log('this.state.items')
+    //console.log(this.state.items)
 
     return ( //Si nunca se intentó la subida, o si se intentó pero no se pudo.
       <View style = {styles.container}>

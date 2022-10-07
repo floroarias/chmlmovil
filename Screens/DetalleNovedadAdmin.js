@@ -133,6 +133,7 @@ class DetalleNovedadAdmin extends React.Component {
 
   _pickCamera = async () => {
     try {
+      const permiso = await ImagePicker.requestCameraPermissionsAsync()
       let result = await ImagePicker.launchCameraAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
@@ -163,13 +164,23 @@ class DetalleNovedadAdmin extends React.Component {
       )
     }
 
+    let imagen = this.state.imagenNovedad
+      ? <Image 
+          source={{ uri: this.state.imagenNovedad.uri }}
+          style={styles.denunciaImage}
+          resizeMethod={'resize'}
+          resizeMode={'contain'}
+        /> 
+      : <Image source={require('../assets/novedades_admin.png')}
+          style={styles.denunciaImage}
+          resizeMethod={'resize'}
+          resizeMode={'contain'}
+        />
+
     if (this.state.uploading) {
       return (
         <View style={{margin: 20, flexDirection: 'column', alignItems: 'center'}}>
-          <Image style={{
-            margin: 20, width: 60, height: 60}}
-            source={require('../assets/novedades_admin.png')}
-          />
+          {imagen}
           <Text style={{
             margin:10, padding: 10, backgroundColor: 'coral', borderColor: 'blue', borderWidth: 1,
             borderRadius: 4, fontWeight: 'bold', fontSize: 10
@@ -223,11 +234,7 @@ class DetalleNovedadAdmin extends React.Component {
         <Text style={styles.portadaText}>Registrar Novedad - CHML Mobile</Text>
             
         <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-          <Image source={require('../assets/novedades_admin.png')}
-            style={styles.denunciaImage}
-            resizeMethod={'resize'}
-            resizeMode={'contain'}
-          />
+          {imagen}
         </View>
         
         <View style={styles.container}>
