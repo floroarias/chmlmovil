@@ -26,6 +26,7 @@ class AdminTodasLasDenuncias extends React.Component {
       })
         .then(response => response.json())
         .then(responseJson => {
+          console.log(responseJson)
           this.setState({
             isLoading: false,
             data: responseJson
@@ -58,7 +59,7 @@ class AdminTodasLasDenuncias extends React.Component {
               source = {require('../assets/error.png')} 
               imageStyle = {{resizeMode: 'contain'}}
           />
-          <Text>DEBE ESTAR REGISTRADO Y SER ADMINISTRADOR PARA VER ESTAS DENUNCIAS</Text>
+          <Text>DEBE ESTAR REGISTRADO Y SER ADMINISTRADOR PARA VER ESTAS DENUNCIAS.</Text>
         </View>
       )
     }
@@ -74,7 +75,7 @@ class AdminTodasLasDenuncias extends React.Component {
             margin:10, padding: 10, backgroundColor: 'coral', borderColor: 'blue', borderWidth: 1,
             borderRadius: 4, fontWeight: 'bold', fontSize: 10
             }}>
-            CARGANDO DENUNCIAS ...
+            Cargando Denuncias...
           </Text>
           <ActivityIndicator size= "large" color='#0000ff'/>
         </View>
@@ -118,12 +119,12 @@ class AdminTodasLasDenuncias extends React.Component {
                 
                 <View style={{
                   flex: 1,
-                  flexDirection: 'row',
-                  backgroundColor: index % 2 == 0 ? '#273BCF' : '#27CF73',
+                  flexDirection: 'column',
+                  backgroundColor: 'lightskyblue',
                   justifyContent: 'center'
                   }}> 
 
-                <Image style={{width: 150, height: 150, margin: 2}} resizeMethod='scale' resizeMode='stretch' 
+                <Image style={styles.imagenDenuncia} resizeMethod='scale' resizeMode='stretch' 
                   source={{uri: 'https://denuncias.chosmalal.net.ar/imagenes/' + item.imagen}}
                 />
 
@@ -133,10 +134,12 @@ class AdminTodasLasDenuncias extends React.Component {
                   fontFamily: 'Roboto',
                   fontSize: 13,
                   fontWeight: 'bold',
+                  margin: 0.3
                   }}>
                   Tipo de Denuncia: {item.tipo_denuncia == 1 ? 'PRIVADA' : 'PUBLICA'}{"\n"}
                   {"\n"}Usuario: {item.nombre + ' '}{item.apellido}{"\n"}
-                  Contacto: {item.mail + ' '}{item.telefono}{"\n"}
+                  Mail: {item.mail + '\n'}
+                  Teléfono: {item.telefono}{"\n"}
                   Descripción: {item.descripcion}{"\n"}
                   Fecha:
                   {' ' + item.fecha.substring(8,10) + '/' +
@@ -191,4 +194,9 @@ const styles = StyleSheet.create({
     height: 40,
     alignSelf: 'center',
   },
+  imagenDenuncia:{
+    width: 300,
+    height: 300,
+    margin: 2
+  }
 });

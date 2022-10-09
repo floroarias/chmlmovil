@@ -25,15 +25,15 @@ class Identificarse extends React.Component {
       nroDoc: '',
       press: false,
       open: false,
-      value: {label: 'DNI', value: 'DNI'},
+      value: null,
       items: [
-        {label: 'DNI', value: 'DNI'},
-        {label: 'CUIT', value: 'CUIT'},
-        {label: 'CUIL', value: 'CUIL'},
-        {label: 'CI', value: 'CI'},
-        {label: 'LC', value: 'LC'},
-        {label: 'LE', value: 'LE'},
-        {label: 'PAS', value: 'PAS'}
+        {label: 'DNI', value: 1},
+        {label: 'CUIT', value: 2},
+        {label: 'CUIL', value: 3},
+        {label: 'CI', value: 4},
+        {label: 'LC', value: 5},
+        {label: 'LE', value: 6},
+        {label: 'PAS', value: 7}
       ],
     }
 
@@ -41,7 +41,6 @@ class Identificarse extends React.Component {
 
   setValue = (callback) => {
     this.setState({ value: callback() })
-    //console.log(this.state.value)
   }
 
   setOpen = (open) => this.setState({ open })
@@ -52,7 +51,10 @@ class Identificarse extends React.Component {
     this.setState({
       tipoDoc: this.props.documento ? this.props.documento.tipoDoc : '',
       nroDoc: this.props.documento ? this.props.documento.nroDoc : '',
+      value: this.props.documento ? this.state.items[this.props.documento.tipoDoc - 1].value : null,
+      //value: this.props.documento ? this.props.documento.tipoDoc : 1,
     })
+    //console.log()
   }
 
   static navigationOptions = {
@@ -60,6 +62,7 @@ class Identificarse extends React.Component {
   };
 
   render() {
+    console.log(this.state)
     const { open, value, items } = this.state;
     
     return (
@@ -101,7 +104,7 @@ class Identificarse extends React.Component {
         
         <KeyboardAvoidingView keyboardVerticalOffset = {120} behavior="padding">
 
-        <View style={styles.inputContainer}>
+        <View>
         <Ionicons name={'ios-finger-print'} size={28} color={'rgba(255, 255, 255, 0.7)'}
           style={styles.inputIcon} />
 
@@ -150,11 +153,11 @@ class Identificarse extends React.Component {
 
 
   dniLogin = () => {
-    if (!this.corroborarNroDoc(this.state.value.label, this.state.nroDoc)){
+    if (!this.corroborarNroDoc(this.state.value, this.state.nroDoc)){
       alert('El número de documento no tiene el formato acorde al tipo de documento (Para CUIL/CUIT utilice el formato ##-########-#, para el resto, utilice 7 u 8 números sin punto).')
       return
     }
-    this.props.contribuyenteLogin({tipoDoc: this.state.value.label, nroDoc: this.state.nroDoc});
+    this.props.contribuyenteLogin({tipoDoc: this.state.value, nroDoc: this.state.nroDoc});
     this.props.navigation.navigate('Impuestos');
   }
 
@@ -162,7 +165,7 @@ class Identificarse extends React.Component {
   corroborarNroDoc(tipoDoc, nroDoc){
     let expresionReg;
 
-    if (tipoDoc == 'CUIL' || tipoDoc == 'CUIT'){
+    if (tipoDoc == 2 || tipoDoc == 3){
       expresionReg = /^\d{2}-\d{8}-\d{1}$/;
     }else{
       expresionReg = /^\d{7}$|^\d{8}$/;
@@ -197,19 +200,19 @@ const styles = StyleSheet.create({
     //justifyContent: 'center',
   },
   input: {
-    width: WIDTH * 0.5,
-    height: 40,
+    height: 50,
     borderRadius: 5,
     fontSize: 16,
     paddingLeft: 45,
     backgroundColor: 'rgba(0, 0, 0, 0.35)',
     color: 'rgba(255, 255, 255, 0.7)',
-    marginHorizontal: 25
+    marginLeft: 20,
+    borderWidth: 1
   },
   inputIcon: {
     position: 'absolute',
-    top: 5,
-    left: 37
+    top: 10,
+    left: 28
   },
   inputContainer: {
     //marginTop: 20,
@@ -246,7 +249,7 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: 'red',
-    width: WIDTH * 0.9,
+    width: WIDTH * 0.8,
     height: 60,
     borderRadius: 5,
     borderWidth: 1,
@@ -283,13 +286,13 @@ const styles = StyleSheet.create({
   },
   contenedorHorizontal:{
     flexDirection: 'row',
-    //alignItems: 'baseline',
-    //justifyContent: "center",
+    alignItems: 'center',
+    alignSelf: "center",
     //width: WIDTH * 0.90, 
     //height: 130,
-    //justifyContent: "space-between",
+    //justifyContent: 'space-between',
     //marginBottom: 10,
-    //marginTop: 10,
+    margin: 10,
     //borderRadius: 10,
   },
   botonPequeno:{

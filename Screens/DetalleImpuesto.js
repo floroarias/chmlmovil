@@ -61,7 +61,7 @@ class DetalleImpuesto extends React.Component {
             margin:10, padding: 10, backgroundColor: 'coral', borderColor: 'blue', borderWidth: 1,
             borderRadius: 4, fontWeight: 'bold', fontSize: 10
             }}>
-            CARGANDO DETALLE DE LA CUENTA ...
+            Cargando Detalle de la Cuenta...
           </Text>
           <ActivityIndicator size= "large" color='#0000ff'/>
         </View>
@@ -101,7 +101,6 @@ class DetalleImpuesto extends React.Component {
         <ScrollView>
 
         <View style = {styles.portada}>
-          <Text style={styles.portadaText}>DETALLE DE IMPUESTO</Text>
           
           <Image style={styles.portadaImage}
             source = {require('../assets/logo_chml_web.png')}
@@ -111,6 +110,7 @@ class DetalleImpuesto extends React.Component {
           />
           
           <Text style={styles.portadaText}>Contribuyente: {this.props.contribuyente.nombres + ' ' + this.props.contribuyente.apellido}</Text>
+          <Text style={styles.portadaText}>Detalle de Impuesto:</Text>
           <Text style={styles.portadaText}>{this.props.cuentaSeleccionada.info_cuenta}</Text>
         </View>
         
@@ -128,7 +128,7 @@ class DetalleImpuesto extends React.Component {
                 <View style={{
                   flex: 1,
                   flexDirection: 'row',
-                  backgroundColor: index % 2 == 0 ? '#273BCF' : '#27CF73',
+                  //backgroundColor: index % 2 == 0 ? '#273BCF' : '#27CF73',
                   justifyContent: 'center',
                   width: WIDTH,
                   }}> 
@@ -141,9 +141,10 @@ class DetalleImpuesto extends React.Component {
                   flex: 1,
                   flexDirection: 'column',
                   fontFamily: 'Roboto',
-                  color: 'white',
+                  color: 'black',
                   fontSize: 13,
                   fontWeight: 'bold',
+                  marginLeft: 10
                   }}>
                   Cuota: {item.periodo}{"\n"}
                   Vencimiento:
@@ -222,13 +223,14 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto',
     color: '#155293',
     fontWeight: 'bold',
-    alignSelf: 'center',
+    alignSelf: 'flex-start',
     fontSize: 14,
-    padding: 10,
+    padding: 5,
   },
   portadaImage: {
     width: WIDTH * 0.9, 
     height: 60,
     alignSelf: 'center',
+    margin: 10
   },
 });

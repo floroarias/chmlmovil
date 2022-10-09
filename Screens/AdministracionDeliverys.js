@@ -10,8 +10,8 @@ class AdministracionDeliverys extends React.Component {
   state = {
     isLoading: true,
     data: [],
-    filtroActivos: false,
-    filtroInactivos: false,
+    filtroActivos: true,
+    filtroInactivos: true,
   }
 
   async componentDidMount() {
@@ -131,22 +131,24 @@ class AdministracionDeliverys extends React.Component {
           </View>
           </TouchableHighlight>
 
+          <View style={styles.checksHorizontales}>
           <View style={styles.checkBoxAround}>
-            <Text style={styles.buttonTextPequeño}>Activos</Text>
+            <Text style={styles.buttonTextPequeño2}>Activos</Text>
             <Checkbox
-              style={{alignSelf: 'center', marginTop: -15}}
+              style={{alignSelf: 'center', marginTop: 5}}
               value={this.state.filtroActivos ? true : false}
               onValueChange={(valor) => this.setState({filtroActivos: valor})}
             />
           </View>
 
           <View style={styles.checkBoxAround}>
-            <Text style={styles.buttonTextPequeño}>Inactivos</Text>
+            <Text style={styles.buttonTextPequeño2}>Inactivos</Text>
             <Checkbox
-              style={{alignSelf: 'center', marginTop: -15}}
+              style={{alignSelf: 'center', marginTop: 5}}
               value={this.state.filtroInactivos ? true : false}
               onValueChange={(valor) => this.setState({filtroInactivos: valor})}
             />
+          </View>
           </View>
 
           <FlatList
@@ -306,5 +308,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#155293',
+  },
+  checksHorizontales:{
+    flexDirection: 'row',
+  },
+  buttonTextPequeño2: {
+    fontFamily: 'Roboto',
+    color: 'white',
+    alignSelf: 'center',
+    fontSize: 14,
   },
 });

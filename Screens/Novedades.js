@@ -18,7 +18,6 @@ export class Novedades extends React.Component {
       .then(response => response.json())
       .then(responseJson => {
         let dataSource = [];
-        console.log(responseJson)
         
         Object.values(responseJson).forEach((item) => {
           let imagen = 'https://chmlmobile.chosmalal.net.ar/novedades/' + item.nombre_imagen
@@ -27,8 +26,6 @@ export class Novedades extends React.Component {
           let objeto = {imagen: imagen, fecha: fecha, observaciones: observaciones}
           dataSource = dataSource.concat(objeto);
         });
-
-        console.log(dataSource)
         
         this.setState({
           isLoading: false,
@@ -77,14 +74,16 @@ export class Novedades extends React.Component {
                 <View style={{
                   flex: 1,
                   flexDirection: 'column',
-                  backgroundColor: index % 2 == 0 ? '#F5F5F5' : '#F5F5F5',
+                  backgroundColor: 'lightskyblue',
                   justifyContent: 'center',
                   borderWidth: 1
                   }}>{/* El item de delivery contiene una imagen con los datos del comercio
                   y dos botones (activar/desactivar y eliminar) */}
 
                   <View>{/* Imágen + texto descriptivo */}
-                    <Image style={{width: Dimensions.get('window').width*0.9, height: Dimensions.get('window').width*1.3}} resizeMethod='scale' resizeMode='stretch' 
+                    <Image
+                      style={styles.imagenNovedad}
+                      resizeMethod='scale' resizeMode='stretch' 
                       source={{uri: item.imagen}}
                     />
 
@@ -95,8 +94,9 @@ export class Novedades extends React.Component {
                       color: 'black',
                       fontSize: 13,
                       fontWeight: 'bold',
+                      marginLeft: 10,
                       }}>
-                        {item.fecha ? 'Fecha: ' + item.fecha + '\n' : ''}
+                        {item.fecha ? ('Fecha: ' + item.fecha) : ''}
                         {item.observaciones ? 'Comentarios: ' + item.observaciones + '\n' : ''}
                     </Text>
                   </View>
@@ -167,4 +167,10 @@ const styles = StyleSheet.create({
     //marginTop: 10,
     //borderRadius: 10,
   },
+  imagenNovedad:{
+    width: Dimensions.get('window').width*0.9,
+    height: Dimensions.get('window').width*1.3,
+    alignSelf: 'center',
+    margin: 10
+  }
 });

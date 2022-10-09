@@ -213,25 +213,21 @@ class AdministracionDenuncias extends React.Component {
                 
                 <View style={{
                     flex: 1,
-                    flexDirection: 'row',
-                    backgroundColor: index % 2 == 0 ? '#273BCF' : '#27CF73',
-                    justifyContent: 'center'
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    borderWidth: 1,
+                    alignItems: 'center',
+                    width: WIDTH,
                   }}>
 
                   <View>
 
-                    <Image style={{width: 250, height: 250, margin: 2}} resizeMethod='scale' resizeMode='stretch' 
+                    <Image style={{width: WIDTH*0.90, height: WIDTH*0.90*1.2, marginTop: 10}} resizeMethod='scale' resizeMode='stretch' 
                       source={{uri: 'https://denuncias.chosmalal.net.ar/imagenes/' + item.imagen}}
                     />
 
-                    <Text style={{
-                      flex: 1,
-                      flexDirection: 'column',
-                      fontFamily: 'Roboto',
-                      fontSize: 13,
-                      fontWeight: 'bold',
-                      }}>
-                      Tipo de Denuncia: {item.tipo_denuncia == '1' ? 'PRIVADA' : 'PUBLICA'}{"\n"}
+                    <Text style={styles.descripcionDenuncia}>
+                      Tipo de Denuncia: {item.tipo_denuncia == '1' ? 'Privada' : 'Pública'}{"\n"}
                       Descripción: {item.descripcion}{"\n"}
                       Fecha:
                       {' ' + item.fecha.substring(8,10) + '/' +
@@ -241,32 +237,22 @@ class AdministracionDenuncias extends React.Component {
 
                   </View>
 
-                  <View style={styles.checkBoxAround}>
+                  <View style={styles.botonesCostadoJuntos}>
+                  <View style={styles.botonesCostado}>
                   <TouchableHighlight onPress={() => this._handleUpload(item.id_denuncia, 1)}>
-                  <Text style={{
-                      flex: 1,
-                      flexDirection: 'column',
-                      fontFamily: 'Roboto',
-                      fontSize: 13,
-                      fontWeight: 'bold',
-                      }}>
-                      {item.tipo_denuncia == '1' ? 'MARCAR COMO PUBLICA' : 'MARCAR COMO PRIVADA'}
+                  <Text style={styles.buttonTextPequeño2}>
+                      {item.tipo_denuncia == '1' ? 'Marcar como Pública' : 'Marcar como Privada'}
                   </Text>
                   </TouchableHighlight>
                   </View>
                   
-                  <View style={styles.checkBoxAround}>
+                  <View style={styles.botonesCostado}>
                   <TouchableHighlight onPress={() => this._handleUpload(item.id_denuncia, 2)}>
-                  <Text style={{
-                      flex: 1,
-                      flexDirection: 'column',
-                      fontFamily: 'Roboto',
-                      fontSize: 13,
-                      fontWeight: 'bold',
-                      }}>
-                      {item.activa == '1' ? 'DESACTIVAR' : 'ACTIVAR'}
+                  <Text style={styles.buttonTextPequeño2}>
+                      {item.activa == '1' ? 'Desactivar' : 'Activar'}
                   </Text>
                   </TouchableHighlight>
+                  </View>
                   </View>
                 
                 </View>
@@ -360,7 +346,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   checkBoxAround: {
-    width: WIDTH*0.38,
+    width: WIDTH*0.20,
     height: 60,
     borderRadius: 5,
     borderWidth: 1,
@@ -392,5 +378,24 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 1,
     marginTop: 10,
+  },
+  botonesCostadoJuntos:{
+    flexDirection: 'row',
+  },
+  botonesCostado: {
+    width: WIDTH*0.40,
+    height: 60,
+    borderRadius: 5,
+    borderWidth: 1,
+    //marginTop: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#155293',
+    margin: 10,
+  },
+  descripcionDenuncia: {
+    fontFamily: 'Roboto',
+    color: 'black',
+    fontSize: 14,
   },
 });

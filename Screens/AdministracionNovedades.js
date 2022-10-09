@@ -16,11 +16,17 @@ class AdministracionNovedades extends React.Component {
     return await fetch('https://chmlmobile.chosmalal.net.ar/novedades/obtener_novedades.php')
       .then(response => response.json())
       .then(responseJson => {
+        //console.log(responseJson)
         let dataSource = [];
         
-        Object.values(responseJson).forEach(item => {
-          dataSource = dataSource.concat('https://chmlmobile.chosmalal.net.ar/novedades/' + item.nombre_imagen);
+        Object.values(responseJson).forEach((item) => {
+          let imagen = 'https://chmlmobile.chosmalal.net.ar/novedades/' + item.nombre_imagen
+          let fecha = item.fecha.substring(8,10) + '/' + item.fecha.substring(5,7) + '/' + item.fecha.substring(0,4)
+          let observaciones = item.observaciones
+          let objeto = {imagen: imagen, fecha: fecha, observaciones: observaciones}
+          dataSource = dataSource.concat(objeto);
         });
+
         //console.log(dataSource)
         this.setState({
           isLoading: false,
@@ -111,6 +117,7 @@ class AdministracionNovedades extends React.Component {
       );
     }
 
+    console.log(this.state.images)
     /* Este método sólo se ejecuta si isLoading es falso.
     Esto significa que se terminó de cargar la información. */
     return (
@@ -133,26 +140,26 @@ class AdministracionNovedades extends React.Component {
                 <View style={{
                   flex: 1,
                   flexDirection: 'column',
-                  backgroundColor: index % 2 == 0 ? '#F5F5F5' : '#F5F5F5',
                   justifyContent: 'center',
-                  borderWidth: 1
+                  borderWidth: 1,
+                  alignItems: 'center',
+                  width: WIDTH,
                   }}>
 
                   <View>
-                    <Image style={{width: 200, height: 250, margin: 2}} resizeMethod='scale' resizeMode='stretch' 
-                      source={{uri: item}}
+                    <Image style={{width: WIDTH*0.95, height: WIDTH*0.95*1.3, marginTop: 10}} resizeMethod='scale' resizeMode='stretch' 
+                      source={{uri: item.imagen}}
                     />
 
-                    <Text style={{
-                      flex: 1,
-                      flexDirection: 'column',
-                      fontFamily: 'Roboto',
-                      color: 'black',
-                      fontSize: 13,
-                      fontWeight: 'bold',
-                      }}>
-                        {item.fecha ? 'Fecha: ' + item.fecha + '\n' : ''}
-                        {item.observaciones ? 'Comentarios: ' + item.observaciones + '\n' : ''}
+                    <Text style={styles.descripcionDenuncia}>
+                      {item.fecha
+                          ? 'Fecha: ' + item.fecha + "\n"
+                          : ''
+                      }
+                      {item.observaciones
+                        ? 'Comentarios: ' + item.observaciones + '\n'
+                        : ''
+                      }
                     </Text>
                   </View>
 
@@ -202,7 +209,8 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 5,
     borderWidth: 1,
-    marginTop: 10,
+    margin: 10,
+    alignSelf: 'center'
   },
   buttonText: {
     fontFamily: 'Roboto',
@@ -275,5 +283,10 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 1,
     marginTop: 10,
+  },
+  descripcionDenuncia: {
+    fontFamily: 'Roboto',
+    color: 'black',
+    fontSize: 14,
   },
 });

@@ -140,6 +140,7 @@ class AdministracionUsuarios extends React.Component {
           </View>
           </TouchableHighlight>
 
+        <View style={styles.checksHorizontales}>
           <View style={styles.checkBoxAround}>
             <Text style={styles.buttonTextPequeño2}>Administradores</Text>
             <Checkbox
@@ -157,6 +158,7 @@ class AdministracionUsuarios extends React.Component {
               onValueChange={(valor) => this.setState({filtroComunes: valor})}
             />
           </View>
+        </View>
 
           <FlatList
             data={this.state.data}
@@ -242,6 +244,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#155293',
+    flexDirection: 'column',
   },
   logo:{
     alignSelf: 'center', 
@@ -278,5 +281,26 @@ const styles = StyleSheet.create({
     color: 'white',
     alignSelf: 'center',
     fontSize: 14,
+  },
+  facebook:{
+    backgroundColor: '#155293',
+  },
+  button: {
+    backgroundColor: 'red',
+    width: 350,
+    height: 60,
+    borderRadius: 5,
+    borderWidth: 1,
+    marginTop: 10,
+  },
+  checksHorizontales:{
+    flexDirection: 'row',
+  },
+  buttonText: {
+    fontFamily: 'Roboto',
+    color: 'white',
+    alignSelf: 'center',
+    fontSize: 20,
+    padding: 10,
   },
 });

@@ -54,7 +54,7 @@ export class Delivery extends React.Component {
             margin:10, padding: 10, backgroundColor: 'coral', borderColor: 'blue', borderWidth: 1,
             borderRadius: 4, fontWeight: 'bold', fontSize: 10
             }}>
-            CARGANDO LISTADO ...
+            Cargando Listado...
           </Text>
           <ActivityIndicator size= "large" color='#0000ff'/>
         </View>
@@ -72,7 +72,7 @@ export class Delivery extends React.Component {
               source={require('../assets/deliverys_admin.png')}
             />
             <Text style={styles.buttonText}> 
-              Agregar Delivery
+              Agregar Mi Delivery
             </Text>
           </View>
         </TouchableHighlight>
@@ -83,7 +83,7 @@ export class Delivery extends React.Component {
             // keyExtractor={(item, key) => item.idComercio}
             renderItem={({item, index}) => 
               
-              <TouchableHighlight style={{width: WIDTH, borderWidth: 1}} onPress={() => {
+              <TouchableHighlight style={{width: WIDTH, borderWidth: 1, backgroundColor: 'lightskyblue'}} onPress={() => {
                 let arregloTelefonos = item.telefono.split('/');
                 let telefono1 = arregloTelefonos[0];
                 //console.log(item.telefono)
@@ -95,11 +95,11 @@ export class Delivery extends React.Component {
                 <View style={{
                   flex: 1,
                   flexDirection: 'row',
-                  backgroundColor: index % 2 == 0 ? '#F5F5F5' : '#F5F5F5',
+                  backgroundColor: 'lightskyblue',
                   justifyContent: 'center'
                   }}> 
 
-                <Image style={{width: 100, height: 100, margin: 2}} resizeMethod='scale' resizeMode='stretch' 
+                <Image style={{width: 150, height: 150, margin: 2}} resizeMethod='scale' resizeMode='stretch' 
                   source={{uri: 'https://delivery.chosmalal.net.ar/imagenes/' + item.imagen}}
                 />
 
@@ -163,7 +163,8 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 5,
     borderWidth: 1,
-    marginTop: 10,
+    margin: 10,
+    alignSelf: 'center'
   },
   buttonText: {
     fontFamily: 'Roboto',

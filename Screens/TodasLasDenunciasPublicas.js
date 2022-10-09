@@ -119,12 +119,12 @@ class TodasLasDenuncias extends React.Component {
                 
                 <View style={{
                   flex: 1,
-                  flexDirection: 'row',
-                  backgroundColor: index % 2 == 0 ? '#273BCF' : '#27CF73',
+                  flexDirection: 'column',
+                  backgroundColor: 'lightskyblue',
                   justifyContent: 'center'
                   }}> 
 
-                <Image style={{width: 100, height: 100, margin: 2}} resizeMethod='scale' resizeMode='stretch' 
+                <Image style={styles.imagenDenuncia} resizeMethod='scale' resizeMode='stretch' 
                   source={{uri: 'https://denuncias.chosmalal.net.ar/imagenes/' + item.imagen}}
                 />
 
@@ -134,9 +134,10 @@ class TodasLasDenuncias extends React.Component {
                   fontFamily: 'Roboto',
                   fontSize: 13,
                   fontWeight: 'bold',
+                  margin: 0.3
                   }}>
                   Usuario: {item.nombre + ' '}{item.apellido}{"\n"}
-                  {"\n"}Descripción: {item.descripcion}{"\n"}
+                  Descripción: {item.descripcion}{"\n"}
                   Fecha:
                   {' ' + item.fecha.substring(8,10) + '/' +
                   item.fecha.substring(5,7) + '/' +
@@ -190,4 +191,9 @@ const styles = StyleSheet.create({
     height: 40,
     alignSelf: 'center',
   },
+  imagenDenuncia:{
+    width: 300,
+    height: 300,
+    margin: 2
+  }
 });

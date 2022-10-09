@@ -137,7 +137,6 @@ class Impuestos extends React.Component {
         <ScrollView>
 
         <View style = {styles.portada}>
-          <Text style={styles.portadaText}>LISTADO DE CUENTAS</Text>
           
           <Image style={styles.portadaImage}
             source = {require('../assets/logo_chml_web.png')}
@@ -147,6 +146,7 @@ class Impuestos extends React.Component {
           />
 
           <Text style={styles.portadaText}>Contribuyente: {this.props.contribuyente.nombres + ' ' + this.props.contribuyente.apellido}</Text>
+          <Text style={styles.portadaText2}>Listado de Cuentas a su Nombre:</Text>
         </View>
 
         <View style={styles.contenido}>
@@ -163,12 +163,12 @@ class Impuestos extends React.Component {
                 <View style={{
                   flex: 1,
                   flexDirection: 'row',
-                  backgroundColor: index % 2 == 0 ? '#273BCF' : '#27CF73',
+                  //backgroundColor: index % 2 == 0 ? '#273BCF' : '#27CF73',
                   justifyContent: 'center',
                   width: WIDTH,
                   }}> 
 
-                <Image style={{width: 40, height: 40, marginLeft: 4, marginRight: 6, marginTop: 10}} resizeMethod='scale' resizeMode='stretch' 
+                <Image style={{width: 50, height: 50, marginLeft: 4, marginRight: 6, marginTop: 10}} resizeMethod='scale' resizeMode='stretch' 
                   source = {item.impuesto_id == 1 ? require('../assets/inmuebles.png') : (item.impuesto_id == 2 ? require('../assets/comercio.png'):require('../assets/automotores.png'))}
                 />
 
@@ -176,7 +176,7 @@ class Impuestos extends React.Component {
                   flex: 1,
                   flexDirection: 'column',
                   fontFamily: 'Roboto',
-                  color: 'white',
+                  color: 'black',
                   fontSize: 13,
                   fontWeight: 'bold',
                   }}>
@@ -266,13 +266,23 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto',
     color: '#155293',
     fontWeight: 'bold',
-    alignSelf: 'center',
+    alignSelf: 'flex-start',
     fontSize: 14,
-    padding: 10,
+    padding: 5,
+    //paddingTop: 10
+  },
+  portadaText2: {
+    fontFamily: 'Roboto',
+    color: '#155293',
+    fontWeight: 'bold',
+    alignSelf: 'flex-start',
+    fontSize: 14,
+    padding: 5,
   },
   portadaImage: {
     width: WIDTH * 0.9, 
     height: 60,
     alignSelf: 'center',
+    margin: 10
   },
 });

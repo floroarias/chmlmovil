@@ -37,7 +37,7 @@ class Denuncias extends React.Component {
         <ScrollView>
 
           <Text style={styles.portadaText}>Denuncias del Ciudadano Chosmalense</Text>
-          <Text style={styles.portadaText}>Las denuncias privadas sólo podrán ser vistas por Ud. y por los Administradores del Municipio</Text>
+          <Text style={styles.portadaText}>Las denuncias privadas sólo podrán ser vistas por Ud. y por los Administradores del Municipio.</Text>
           
           <Image style={styles.portadaImage}
             source = {require('../assets/screen_denuncias.png')}
@@ -110,6 +110,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 1,
     marginTop: 10,
+    alignSelf: 'center',
   },
   buttonText: {
     fontFamily: 'Roboto',
