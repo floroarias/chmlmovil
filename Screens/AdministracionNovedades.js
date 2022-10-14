@@ -134,6 +134,7 @@ class AdministracionNovedades extends React.Component {
           </View>
           </TouchableHighlight>
 
+          <View style={{marginBottom: 160}}>
           <FlatList
             data={this.state.images}
             renderItem={({item, index}) =>   
@@ -164,8 +165,7 @@ class AdministracionNovedades extends React.Component {
                   </View>
 
                   <View>{/* Botón de eliminar */}
-
-                    <TouchableHighlight style={[styles.button, styles.facebook]} onPress={() => this.props.navigation.navigate('DeliveryMain')}>
+                    <TouchableHighlight style={[styles.button2, styles.facebook]} onPress={() => this.props.navigation.navigate('DeliveryMain')}>
                       <View style={styles.buttoncontent}>
                         <Image style={styles.buttonImage}
                           source={require('../assets/papelera.png')}
@@ -181,6 +181,7 @@ class AdministracionNovedades extends React.Component {
               
             }
           />
+          </View>
 
       </View>
     );
@@ -205,11 +206,20 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: 'red',
-    width: 350,
+    width: WIDTH*0.9,
     height: 60,
     borderRadius: 5,
     borderWidth: 1,
     margin: 10,
+    alignSelf: 'center'
+  },
+  button2: {
+    backgroundColor: 'red',
+    width: WIDTH*0.6,
+    height: 60,
+    borderRadius: 5,
+    borderWidth: 1,
+    marginBottom: 10,
     alignSelf: 'center'
   },
   buttonText: {

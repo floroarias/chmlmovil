@@ -283,7 +283,6 @@ class DetalleNovedadAdmin extends React.Component {
 
         </KeyboardAvoidingView>
 
-        <View style={styles.contenedorHorizontal}>
         <TouchableHighlight style={[styles.buttonDenunciar, styles.facebook, {marginBottom: 10}]} onPress={() => this._handleUpload()}>
           <View style={styles.buttoncontent}>
             <Image style={styles.buttonImage}
@@ -294,7 +293,6 @@ class DetalleNovedadAdmin extends React.Component {
             </Text>
           </View>
         </TouchableHighlight>
-        </View>
 
         </View>
 
@@ -488,7 +486,7 @@ const styles = StyleSheet.create({
   },
   buttonDenunciar: {
     //backgroundColor: 'red',
-    width: WIDTH*0.5,
+    width: WIDTH*0.8,
     height: 60,
     borderRadius: 5,
     borderWidth: 1,

@@ -219,7 +219,8 @@ const styles = StyleSheet.create({
   },
   portadaImage: {
     width: WIDTH * 0.9, 
-    height: 80,
+    height: 100,
     alignSelf: 'center',
+    margin: 10,
   },
 });

@@ -107,14 +107,22 @@ class AdministracionDeliverys extends React.Component {
             margin:10, padding: 10, backgroundColor: 'coral', borderColor: 'blue', borderWidth: 1,
             borderRadius: 4, fontWeight: 'bold', fontSize: 10
             }}>
-            CARGANDO LISTADO ...
+            Cargando Listado...
           </Text>
           <ActivityIndicator size= "large" color='#0000ff'/>
         </View>
 
       );
     }
-
+    
+    //Filtro la información de acuerdo a los checkboxes.
+    let dataFiltrada = this.state.data
+    if (!this.state.filtroActivos){
+      dataFiltrada = dataFiltrada.filter(item => item.activo != 1)
+    }
+    if (!this.state.filtroInactivos){
+      dataFiltrada = dataFiltrada.filter(item => item.tipo_denuncia != 0)
+    }
     /* Este método sólo se ejecuta si isLoading es falso.
     Esto significa que se terminó de cargar la información. */
     return (
@@ -132,6 +140,7 @@ class AdministracionDeliverys extends React.Component {
           </TouchableHighlight>
 
           <View style={styles.checksHorizontales}>
+      
           <View style={styles.checkBoxAround}>
             <Text style={styles.buttonTextPequeño2}>Activos</Text>
             <Checkbox
@@ -149,56 +158,39 @@ class AdministracionDeliverys extends React.Component {
               onValueChange={(valor) => this.setState({filtroInactivos: valor})}
             />
           </View>
+      
           </View>
 
+          <View style={{marginBottom: 300}}>
           <FlatList
-            data={this.state.data}
-          
+            data={dataFiltrada}
             // keyExtractor={(item, key) => item.idComercio}
             renderItem={({item, index}) =>   
                 
-                <View style={{
-                  flex: 1,
-                  flexDirection: 'row',
-                  backgroundColor: index % 2 == 0 ? '#F5F5F5' : '#F5F5F5',
-                  justifyContent: 'center'
-                  }}>{/* El item de delivery contiene una imagen con los datos del comercio
+                <View style={styles.itemLista}>{/* El item de delivery contiene una imagen con los datos del comercio
                   y dos botones (activar/desactivar y eliminar) */}
 
-                  <View>{/* Imágen + texto descriptivo */}
-                    <Image style={{width: 100, height: 100, margin: 2}} resizeMethod='scale' resizeMode='stretch' 
+                  <View style={styles.imagenBotones}>{/* Imágen + botones */}
+                    <Image style={{width: 150, height: 150, margin: 2}} resizeMethod='scale' resizeMode='stretch' 
                       source={{uri: 'https://delivery.chosmalal.net.ar/imagenes/' + item.imagen}}
                     />
 
-                    <Text style={{
-                      flex: 1,
-                      flexDirection: 'column',
-                      fontFamily: 'Roboto',
-                      color: 'black',
-                      fontSize: 13,
-                      fontWeight: 'bold',
-                      }}>
-                      {item.nombrecomercio}{"\n"}
-                      {"\n"}{item.direccion}{"\n"}
-                      Tel.: {item.telefono}{"\n"}
-                      {item.observaciones !== null ? item.observaciones + '\n' : ''}
-                      Rubro: {this.mostrarRubros(item.rubros)}
-                    </Text>
-                  </View>
-
-                  <View>{/* Botones de activar/desactivar y eliminar */}
-                    <TouchableHighlight style={[styles.button, styles.facebook]} onPress={() => this.props.navigation.navigate('DeliveryMain')}>
+                  <View style={styles.botonesActivarEliminar}>{/* Botones de activar/desactivar y eliminar */}
+                    
+                    <TouchableHighlight style={[styles.button2, styles.facebook]} onPress={() => this.props.navigation.navigate('DeliveryMain')}>
                       <View style={styles.buttoncontent}>
                         <Image style={styles.buttonImage}
+                          resizeMethod={'resize'}
+                          resizeMode={'contain'}
                           source={item.activo ? require('../assets/off.png') : require('../assets/on.png')}
                         />
                         <Text style={styles.buttonText}>
-                          {item.activo ? 'Desactivar' : 'Activar'}
+                          {item.activo == 1 ? 'Desactivar' : 'Activar'}
                         </Text>
                       </View>
                     </TouchableHighlight>
 
-                    <TouchableHighlight style={[styles.button, styles.facebook]} onPress={() => this.props.navigation.navigate('DeliveryMain')}>
+                    <TouchableHighlight style={[styles.button2, styles.facebook]} onPress={() => this.props.navigation.navigate('DeliveryMain')}>
                       <View style={styles.buttoncontent}>
                         <Image style={styles.buttonImage}
                           source={require('../assets/papelera.png')}
@@ -208,12 +200,24 @@ class AdministracionDeliverys extends React.Component {
                         </Text>
                       </View>
                     </TouchableHighlight>
-                  </View>
+                  
+                  </View>{/* Botones de activar/desactivar y eliminar */}
 
-                </View>//Fin del item.
+                  </View>{/* Imágen + botones */}
+
+                  <Text style={styles.textoDescriptivo}>
+                      {item.nombrecomercio}{"\n"}
+                      {"\n"}{item.direccion}{"\n"}
+                      Tel.: {item.telefono}{"\n"}
+                      {item.observaciones !== null ? item.observaciones + '\n' : ''}
+                      Rubro: {this.mostrarRubros(item.rubros)}
+                    </Text>
+
+                </View> //Fin del item (imágen + botones y debajo el texto).
               
             }
           />
+          </View>
 
       </View>
     );
@@ -239,7 +243,16 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: 'red',
-    width: 350,
+    width: WIDTH*0.9,
+    height: 60,
+    borderRadius: 5,
+    borderWidth: 1,
+    marginTop: 10,
+    alignSelf: 'center',
+  },
+  button2: {
+    backgroundColor: 'red',
+    width: WIDTH*0.4,
     height: 60,
     borderRadius: 5,
     borderWidth: 1,
@@ -300,7 +313,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   checkBoxAround: {
-    width: WIDTH*0.38,
+    width: WIDTH*0.25,
     height: 60,
     borderRadius: 5,
     borderWidth: 1,
@@ -308,14 +321,41 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#155293',
+    marginHorizontal:10,
   },
   checksHorizontales:{
     flexDirection: 'row',
+    alignSelf: 'center',
+    margin: 10,
   },
   buttonTextPequeño2: {
     fontFamily: 'Roboto',
     color: 'white',
     alignSelf: 'center',
     fontSize: 14,
+  },
+  itemLista: {
+      flex: 1,
+      flexDirection: 'column',
+      //marginLeft: 10,
+      borderWidth: 1,
+      //backgroundColor: index % 2 == 0 ? '#F5F5F5' : '#F5F5F5',
+      //justifyContent: 'center'
+  },
+  botonesActivarEliminar: {
+    marginLeft: 10,
+  },
+  imagenBotones: {
+    flex: 1,
+    flexDirection: 'row',
+  },
+  textoDescriptivo: {
+    flex: 1,
+    flexDirection: 'column',
+    fontFamily: 'Roboto',
+    color: 'black',
+    fontSize: 13,
+    fontWeight: 'bold',
+    marginLeft: 2,
   },
 });

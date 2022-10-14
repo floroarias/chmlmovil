@@ -70,7 +70,7 @@ class Login extends React.Component {
             source={require('../assets/usuario_admin.png')}
           />
           <Text style={styles.buttonText}> 
-            ADMINISTRACIÓN
+            Menú de Administración
           </Text>
         </View>
         </TouchableHighlight>
@@ -96,7 +96,7 @@ class Login extends React.Component {
           
           {botonAdministrador}
 
-          <View style={{marginTop: 50}}>
+          <View>
           <TouchableHighlight style={[styles.button, styles.facebook]} onPress={()=> this.props.navigation.navigate('Home')}>
             <View style={styles.buttoncontent}>
               <Image style={styles.buttonImage}
@@ -108,12 +108,12 @@ class Login extends React.Component {
             </View>
           </TouchableHighlight>
           
-          <TouchableHighlight style={[styles.buttonLogout, styles.facebook, {alignSelf: 'center', alignItems: 'center'}]} onPress={(this.logout.bind(this))}>
-            <View style={styles.buttonLogoutContent}>
-              <Image style={styles.buttonLogoutImage}
+          <TouchableHighlight style={[styles.button, styles.facebook]} onPress={(this.logout.bind(this))}>
+            <View style={styles.buttoncontent}>
+              <Image style={styles.buttonImage}
                 source={require('../assets/logout.png')}
               />
-              <Text style={styles.buttonLogoutText}> 
+              <Text style={styles.buttonText}> 
                 Cerrar Sesión
               </Text>
             </View>
@@ -146,7 +146,7 @@ class Login extends React.Component {
             </View>
 
             <View style={styles.inputContainer}>
-              <Ionicons name={'ios-lock'} size={28} color={'rgba(255, 255, 255, 0.7)'}
+              <Ionicons name={'lock-closed-outline'} size={28} color={'rgba(255, 255, 255, 0.7)'}
                 style={styles.inputIcon} />
 
               <TextInput

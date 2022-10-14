@@ -118,7 +118,7 @@ class DetalleNuevoDelivery extends React.Component {
   };
 
   async uploadImageAsync(uri) {
-    let apiUrl = 'https://chmlmobile.chosmalal.net.ar/apideliverys/v1/subir_nuevo_delivery.php';
+    let apiUrl = 'https://delivery.chosmalal.net.ar/v1/subir_nuevo_delivery.php';
     
     let uriParts = uri.split('.');
     let fileType = uriParts[uriParts.length - 1];
@@ -127,11 +127,12 @@ class DetalleNuevoDelivery extends React.Component {
       auxExt = 'jpeg'
     }
 
-    let rubrosSeleccionados = this.state.value.map((rubro) => ({
-      nombrerubro: rubro.value
-    }));
+    //let rubrosSeleccionados = this.state.value.map((rubro) => ({
+    //  nombrerubro: rubro.value
+    //}));
 
-    let rubrosSeleccionadosJSON = rubrosSeleccionados.json();
+    //let rubrosSeleccionados = this.state.value;
+    //let rubrosSeleccionadosJSON = rubrosSeleccionados.json();
   
     let formData = new FormData();
     formData.append('imagen', {
@@ -139,11 +140,12 @@ class DetalleNuevoDelivery extends React.Component {
       name: `deliveryMobile.${fileType}`,
       type: `image/${auxExt}`,
     });
-    formData.append('nombreComercio', this.state.nombreComercio)
+    formData.append('nombrecomercio', this.state.nombreComercio)
     formData.append('telefono', this.state.telefono)
     formData.append('direccion', this.state.direccion)
     formData.append('observaciones', this.state.observaciones)
-    formData.append('rubros', rubrosSeleccionadosJSON)
+    formData.append('rubros', this.state.value)
+    formData.append('id_usuario', this.props.usuario.idUsuario)
     formData.append('jwt', this.props.usuario.jwt)
   
     let options = {
@@ -296,7 +298,7 @@ class DetalleNuevoDelivery extends React.Component {
 
     //console.log('this.state.items')
     //console.log(this.state.items)
-
+    //console.log(this.state)
     return ( //Si nunca se intentó la subida, o si se intentó pero no se pudo.
       <View style = {styles.container}>
 
@@ -308,7 +310,7 @@ class DetalleNuevoDelivery extends React.Component {
         
         <View style={styles.container}>
         
-        <View style={[styles.contenedorHorizontal, {marginBottom: -20}]}>
+        <View style={styles.contenedorHorizontal}>
         <TouchableHighlight style={[styles.buttonHorizontal, styles.facebook]} onPress={this._pickImage}>
           <View style={styles.buttoncontent}>
             <Image style={styles.buttonImage}
@@ -629,7 +631,7 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 5,
     borderWidth: 1,
-    marginTop: 10,
+    //marginTop: 10,
   },
   buttonDenunciar: {
     //backgroundColor: 'red',

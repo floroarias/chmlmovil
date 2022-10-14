@@ -253,7 +253,7 @@ export default class Registrarse extends React.Component {
         </View>
 
         <View style={styles.inputContainer}>
-          <Ionicons name={'ios-lock'} size={28} color={'rgba(255, 255, 255, 0.7)'}
+          <Ionicons name={'lock-closed-outline'} size={28} color={'rgba(255, 255, 255, 0.7)'}
             style={styles.inputIcon} />
 
           <TextInput
@@ -275,7 +275,7 @@ export default class Registrarse extends React.Component {
         </View>
 
         <View style={styles.inputContainer}>
-          <Ionicons name={'ios-lock'} size={28} color={'rgba(255, 255, 255, 0.7)'}
+          <Ionicons name={'lock-closed-outline'} size={28} color={'rgba(255, 255, 255, 0.7)'}
             style={styles.inputIcon} />
 
           <TextInput

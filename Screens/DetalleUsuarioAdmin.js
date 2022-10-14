@@ -1,4 +1,4 @@
-//Esta pantalla se usa tanto para editar como para agregar un usuario nuevo.
+//Esta pantalla se usa para editar o eliminar un usuario existente, o agregar un usuario nuevo.
 //Solo usuarios de tipo Admin.
 import React from 'react';
 import { StyleSheet, Text, View, TouchableHighlight, TextInput, TouchableOpacity,
@@ -125,24 +125,20 @@ class DetalleUsuarioAdmin extends React.Component {
 
   render() {
     return (
-      <View style={{backgroundColor: '#155293'}}>
-
       <View style = {styles.container}>
 
-        <ScrollView>
-
-        <Text style={styles.portadaText}>Registro de Usuarios - CHML Mobile</Text>
-        <Text style={styles.portadaText}>Usuario Administrador</Text>
+          <Text style={styles.portadaText}>Registro de Usuarios - CHML Mobile</Text>
+          <Text style={styles.portadaText}>Usuario Administrador</Text>
+          
+          <Image style={styles.portadaImage}
+          source = {require('../assets/usuario_admin.png')}
+          resizeMethod={'resize'}
+          resizeMode={'contain'} 
+          //imageStyle = {{resizeMode: 'center'}}
+          />
         
-        <Image style={styles.portadaImage}
-        source = {require('../assets/usuario_admin.png')}
-        resizeMethod={'resize'}
-        resizeMode={'contain'} 
-        //imageStyle = {{resizeMode: 'center'}}
-        />
-
-        <KeyboardAvoidingView>
-
+        <KeyboardAvoidingView behavior="height">
+          
         <View style={styles.inputContainer}>
           <Ionicons name={'ios-person'} size={28} color={'rgba(255, 255, 255, 0.7)'}
             style={styles.inputIcon} />
@@ -192,63 +188,58 @@ class DetalleUsuarioAdmin extends React.Component {
         </View>
 
         <View style={styles.inputContainer}>
-          <Ionicons name={'ios-lock'} size={28} color={'rgba(255, 255, 255, 0.7)'}
-            style={styles.inputIcon} />
+              <Ionicons name={'lock-closed-outline'} size={28} color={'rgba(255, 255, 255, 0.7)'}
+                style={styles.inputIcon} />
 
-          <TextInput
-            onChangeText={(contrasena1) => this.setState({contrasena1})}
-            style = {styles.input}
-            placeholder = {'Password'}
-            ref='contrasena1'
-            returnKeyType='next'
-            secureTextEntry = {this.state.showPass} 
-            placeholderTextColor = {'rgba(255, 255, 255, 0.7)'}
-            underlineColorAndroid = 'transparent'
-            value={this.state.contrasena1}
-          />
-          
-          <TouchableOpacity style={styles.btnEye} onPress={this.showPass.bind(this)}>
-            <Ionicons name={this.state.press == false ? 'ios-eye' : 'ios-eye-off'} 
-              size={28} color={'rgba(255, 255, 255, 0.7)'}/>
-          </TouchableOpacity>
-        </View>
+              <TextInput
+                onChangeText={(contrasena1) => this.setState({contrasena1})}
+                style = {styles.input}
+                placeholder = {'Password'}
+                ref='password'
+                returnKeyType='next'
+                secureTextEntry = {this.state.showPass} 
+                placeholderTextColor = {'rgba(255, 255, 255, 0.7)'}
+                underlineColorAndroid = 'transparent'
+                value={this.state.contrasena1}
+              />
+            
+              <TouchableOpacity style={styles.btnEye} onPress={this.showPass.bind(this)}>
+                <Ionicons name={this.state.press == false ? 'ios-eye' : 'ios-eye-off'} 
+                  size={28} color={'rgba(255, 255, 255, 0.7)'}/>
+              </TouchableOpacity>        
+            </View>
 
-        <View style={styles.inputContainer}>
-          <Ionicons name={'ios-lock'} size={28} color={'rgba(255, 255, 255, 0.7)'}
-            style={styles.inputIcon} />
+            <View style={styles.inputContainer}>
+              <Ionicons name={'lock-closed-outline'} size={28} color={'rgba(255, 255, 255, 0.7)'}
+                style={styles.inputIcon} />
 
-          <TextInput
-            onChangeText={(contrasena2) => this.setState({contrasena2})}
-            style = {styles.input}
-            placeholder = {'Password Nuevamente'}
-            ref='contrasena2'
-            returnKeyType='next'
-            secureTextEntry = {this.state.showPass} 
-            placeholderTextColor = {'rgba(255, 255, 255, 0.7)'}
-            underlineColorAndroid = 'transparent'
-            value={this.state.contrasena2}
-          />
-
-          <TouchableOpacity style={styles.btnEye} onPress={this.showPass.bind(this)}>
-            <Ionicons name={this.state.press == false ? 'ios-eye' : 'ios-eye-off'} 
-              size={28} color={'rgba(255, 255, 255, 0.7)'}/>
-          </TouchableOpacity>
-        </View>
-        
+              <TextInput
+                onChangeText={(contrasena2) => this.setState({contrasena2})}
+                style = {styles.input}
+                placeholder = {'Password Nuevamente'}
+                ref='password'
+                returnKeyType='next'
+                secureTextEntry = {this.state.showPass} 
+                placeholderTextColor = {'rgba(255, 255, 255, 0.7)'}
+                underlineColorAndroid = 'transparent'
+                value={this.state.contrasena2}
+              />
+            
+              <TouchableOpacity style={styles.btnEye} onPress={this.showPass.bind(this)}>
+                <Ionicons name={this.state.press == false ? 'ios-eye' : 'ios-eye-off'} 
+                  size={28} color={'rgba(255, 255, 255, 0.7)'}/>
+              </TouchableOpacity>        
+            </View>
         </KeyboardAvoidingView>
 
-        </ScrollView>
-                
-        </View>
-
-        <View style={[styles.contenedorHorizontal, {marginBottom: -20}]}>
+        <View style={styles.contenedorHorizontal}>
         
           <TouchableHighlight style={[styles.buttonHorizontal, styles.facebook]} onPress={() => this.props.navigation.navigate('AdministracionUsuarios')}>
             <View style={styles.buttoncontent}>
               <Image style={styles.buttonImage}
                 source={require('../assets/cancel.png')}
               />
-              <Text style={styles.buttonTextPequeño}> 
+              <Text style={styles.buttonTextPequeño2}> 
                 Cancelar
               </Text>
             </View>
@@ -268,15 +259,14 @@ class DetalleUsuarioAdmin extends React.Component {
               <Image style={styles.buttonImage}
                 source={require('../assets/ok.png')}
               />
-              <Text style={styles.buttonTextPequeño}> 
-                Guardar Usuario
+              <Text style={styles.buttonTextPequeño2}> 
+                Guardar
               </Text>
             </View>
           </TouchableHighlight>
         
         </View>
-      
-      </View>
+        </View>
     );
   }
 }
@@ -291,52 +281,140 @@ function mapStateToProps (state)  {
 export default connect(mapStateToProps)(DetalleUsuarioAdmin);
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#155293',
-  },
-  logo:{
-    alignSelf: 'center', 
-    width: 271, 
-    height: 90,
-    marginBottom: 10,
-    marginTop: 10,
-    borderRadius: 10,
-  },
-  buttoncontent: {
-    borderColor: 'black',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingTop: 5,
-    paddingLeft: 15,
-  },
-  buttonImage: {
-    width: 40, 
-    height: 40,
-    alignSelf: 'center',
-  },
-  contenedorHorizontal:{
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: WIDTH * 0.90, 
-    height: 130,
-    justifyContent: "space-between",
-    marginBottom: -10,
-    marginTop: -20,
-    //borderRadius: 10,
-  },
-  buttonHorizontal: {
-    //backgroundColor: 'red',
-    width: WIDTH*0.4,
-    height: 60,
-    borderRadius: 5,
-    borderWidth: 1,
-    marginTop: 10,
-  },
+    container: {
+      flex: 1,
+      backgroundColor: 'lightskyblue',
+      //alignItems: 'center',
+      //justifyContent: 'center',
+      //margin: 10,
+    },
+    input: {
+      width: WIDTH * 0.9,
+      height: 40,
+      borderRadius: 45,
+      fontSize: 16,
+      paddingLeft: 45,
+      backgroundColor: 'rgba(0, 0, 0, 0.35)',
+      color: 'rgba(255, 255, 255, 0.7)',
+      marginHorizontal: 25
+    },
+    inputIcon: {
+      position: 'absolute',
+      top: 5,
+      left: 37
+    },
+    inputContainer: {
+      margin: 10,
+      alignSelf: 'center',
+    },
+    btnEye: {
+      position: 'absolute',
+      top: 5,
+      right: 37
+    },
+    btnLogin: {
+      width: WIDTH - 55,
+      height: 45,
+      borderRadius: 5,
+      backgroundColor: '#ab333c',
+      justifyContent: 'center',
+      marginTop: 20,
+    },
+    loginText: {
+      color: 'rgba(255, 255, 255, 0.7)',
+      fontSize: 18,
+      fontWeight: 'bold',
+      textAlign: 'center'
+    },
+    button: {
+      backgroundColor: 'red',
+      width: WIDTH * 0.9,
+      height: 60,
+      borderRadius: 5,
+      borderWidth: 1,
+      marginTop: 10,
+    },
+    buttonHorizontal: {
+      //backgroundColor: 'red',
+      width: WIDTH * 0.28,
+      height: 60,
+      borderRadius: 5,
+      borderWidth: 1,
+      margin: 10,
+      alignItems: 'flex-start',
+    },
+    buttonText: {
+      fontFamily: 'Roboto',
+      color: 'white',
+      //alignSelf: 'center',
+      fontSize: 20,
+      //padding: 10,
+    },
+    buttonImage: {
+      width: 40, 
+      height: 40,
+      alignSelf: 'flex-start',
+    },
+    buttoncontent: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingTop: 5,
+      paddingLeft: 5,
+    },
+    facebook:{
+      backgroundColor: '#155293',
+    },
+    portadaText: {
+      fontFamily: 'Roboto',
+      color: '#155293',
+      fontWeight: 'bold',
+      alignSelf: 'center',
+      fontSize: 14,
+      padding: 10,
+    },
+    portadaImage: {
+      width: WIDTH * 0.9, 
+      height: 150,
+      alignSelf: 'center',
+    },
+    buttonLogout: {
+      //backgroundColor: 'red',
+      width: WIDTH * 0.4,
+      height: 30,
+      borderRadius: 5,
+      borderWidth: 1,
+      marginTop: 30,
+    },
+    buttonLogoutContent: {
+      flexDirection: 'row',
+      justifyContent: 'flex-start',
+      alignItems: 'center',
+      paddingTop: 3,
+      paddingLeft: 0,
+    },
+    buttonLogoutText: {
+      fontFamily: 'Roboto',
+      color: 'white',
+      alignSelf: 'center',
+      fontSize: 15,
+      //padding: 10,
+      paddingLeft: 10,
+    },
+    buttonLogoutImage: {
+      width: 20, 
+      height: 20,
+      alignSelf: 'flex-start',
+    },
+    portadaData: {
+      fontFamily: 'Roboto',
+      color: '#155293',
+      fontWeight: 'bold',
+      alignSelf: 'center',
+      fontSize: 20,
+      padding: 10,
+    },
   checkBoxAround: {
-    width: WIDTH*0.38,
+    width: WIDTH*0.28,
     height: 60,
     borderRadius: 5,
     borderWidth: 1,
@@ -344,11 +422,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#155293',
+    margin: 10,
   },
   buttonTextPequeño2: {
     fontFamily: 'Roboto',
     color: 'white',
     alignSelf: 'center',
     fontSize: 14,
+    marginLeft: 5,
+  },
+  contenedorHorizontal: {
+    flexDirection: 'row',
+    //alignSelf: 'center',
   },
 });

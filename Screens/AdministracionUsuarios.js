@@ -124,6 +124,14 @@ class AdministracionUsuarios extends React.Component {
       );
     }
 
+    //Filtro la información de acuerdo a los checkboxes.
+    let dataFiltrada = this.state.data
+    if (!this.state.filtroAdmins){
+      dataFiltrada = dataFiltrada.filter(item => item.perfil_usuario != 2)
+    }
+    if (!this.state.filtroComunes){
+      dataFiltrada = dataFiltrada.filter(item => item.perfil_usuario != 1)
+    }
     /* Este método sólo se ejecuta si isLoading es falso.
     Esto significa que se terminó de cargar la información. */
     return (
@@ -141,6 +149,7 @@ class AdministracionUsuarios extends React.Component {
           </TouchableHighlight>
 
         <View style={styles.checksHorizontales}>
+
           <View style={styles.checkBoxAround}>
             <Text style={styles.buttonTextPequeño2}>Administradores</Text>
             <Checkbox
@@ -158,45 +167,26 @@ class AdministracionUsuarios extends React.Component {
               onValueChange={(valor) => this.setState({filtroComunes: valor})}
             />
           </View>
+
         </View>
 
+        <View style={{marginBottom: 300}}>
           <FlatList
-            data={this.state.data}
-            // keyExtractor={(item, key) => item.id}
+            data={dataFiltrada}
             renderItem={({item, index}) =>   
                 
-                <View style={{
-                  flex: 1,
-                  flexDirection: 'row',
-                  backgroundColor: index % 2 == 0 ? '#F5F5F5' : '#F5F5F5',
-                  justifyContent: 'center',
-                  borderWidth: 1
-                  }}>{/* El item de usuario contiene los datos del usuario
-                  y dos botones (editar y eliminar) */}
+                <View style={styles.itemLista}>
 
-                  <View>{/* texto descriptivo */}
-                    <Image style={{width: 100, height: 100, margin: 2}} resizeMethod='scale' resizeMode='stretch' 
+                  <View style={styles.imagenBotones}>
+                  <View>
+                    <Image style={{width: 150, height: 150, margin: 2}} resizeMethod='scale' resizeMode='stretch' 
                       source={item.perfil_usuario == 2 ? require('../assets/usuario_admin.png') : item.confirmado == 1 ? require('../assets/logueado.png'): require('../assets/avatar.png')}
                     />
-
-                    <Text style={{
-                      flex: 1,
-                      flexDirection: 'column',
-                      fontFamily: 'Roboto',
-                      color: 'black',
-                      fontSize: 13,
-                      fontWeight: 'bold',
-                      }}>
-                      Mail: {item.mail}{"\n"}
-                      Nombre: {item.nombre + ' ' + item.apellido}{"\n"}
-                      Fecha de Alta.: {item.timestamp}{"\n"}
-                      Confirmado: {item.confirmado == 1 ? 'Sí' : 'No'}{"\n"}
-                      Tipo de Usuario: {item.perfil_usuario == 2 ? 'Administrador' : 'Usuario Común'}
-                    </Text>
                   </View>
 
-                  <View>{/* Botones de activar/desactivar y eliminar */}
-                    <TouchableHighlight style={[styles.button, styles.facebook]} onPress={() => this.props.navigation.navigate('DetalleUsuarioAdmin', {accion: 'modificar', usuario: item})}>
+                  <View style={styles.botonesActivarEliminar}>
+                  
+                    <TouchableHighlight style={[styles.button2, styles.facebook]} onPress={() => this.props.navigation.navigate('DetalleUsuarioAdmin', {accion: 'modificar', usuario: item})}>
                       <View style={styles.buttoncontent}>
                         <Image style={styles.buttonImage}
                           source={require('../assets/editar.png')}
@@ -207,7 +197,7 @@ class AdministracionUsuarios extends React.Component {
                       </View>
                     </TouchableHighlight>
 
-                    <TouchableHighlight style={[styles.button, styles.facebook]} onPress={() => this.props.navigation.navigate('DeliveryMain')}>
+                    <TouchableHighlight style={[styles.button2, styles.facebook]} onPress={() => this.props.navigation.navigate('DeliveryMain')}>
                       <View style={styles.buttoncontent}>
                         <Image style={styles.buttonImage}
                           source={require('../assets/papelera.png')}
@@ -217,12 +207,23 @@ class AdministracionUsuarios extends React.Component {
                         </Text>
                       </View>
                     </TouchableHighlight>
+                  
+                  </View>
                   </View>
 
-                </View>//Fin del item.
+                  <Text style={styles.textoDescriptivo}>
+                    Mail: {item.mail}{"\n"}
+                    Nombre: {item.nombre + ' ' + item.apellido}{"\n"}
+                    Fecha de Alta.: {item.timestamp}{"\n"}
+                    Confirmado: {item.confirmado == 1 ? 'Sí' : 'No'}{"\n"}
+                    Tipo de Usuario: {item.perfil_usuario == 2 ? 'Administrador' : 'Usuario Común'}
+                  </Text>
+
+                </View>
               
             }
           />
+          </View>
 
       </View>
     );
@@ -275,6 +276,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#155293',
+    margin: 10,
   },
   buttonTextPequeño2: {
     fontFamily: 'Roboto',
@@ -287,7 +289,16 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: 'red',
-    width: 350,
+    width: WIDTH*0.8,
+    height: 60,
+    borderRadius: 5,
+    borderWidth: 1,
+    marginTop: 10,
+    alignSelf: 'center',
+  },
+  button2: {
+    backgroundColor: 'red',
+    width: WIDTH*0.4,
     height: 60,
     borderRadius: 5,
     borderWidth: 1,
@@ -295,6 +306,7 @@ const styles = StyleSheet.create({
   },
   checksHorizontales:{
     flexDirection: 'row',
+    alignSelf: 'center',
   },
   buttonText: {
     fontFamily: 'Roboto',
@@ -302,5 +314,29 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     fontSize: 20,
     padding: 10,
+  },
+  itemLista: {
+    flex: 1,
+    flexDirection: 'column',
+    //marginLeft: 10,
+    borderWidth: 1,
+    //backgroundColor: index % 2 == 0 ? '#F5F5F5' : '#F5F5F5',
+    //justifyContent: 'center'
+  },
+  botonesActivarEliminar: {
+    marginLeft: 10,
+  },
+  imagenBotones: {
+    //flex: 1,
+    flexDirection: 'row',
+  },
+  textoDescriptivo: {
+    //flex: 1,
+    flexDirection: 'column',
+    fontFamily: 'Roboto',
+    color: 'black',
+    fontSize: 13,
+    fontWeight: 'bold',
+    marginLeft: 2,
   },
 });

@@ -20,7 +20,8 @@ class AdministracionDenuncias extends React.Component {
     filtroActivas: true,
     filtroInactivas: true,
     filtroPublicas: true,
-    filtroPrivadas: true
+    filtroPrivadas: true,
+    dataFiltrada: [],
   }
   
   async componentDidMount() {
@@ -155,6 +156,21 @@ class AdministracionDenuncias extends React.Component {
       );
     }
 
+    //Filtro la información de acuerdo a los checkboxes.
+    let dataFiltrada = this.state.data
+    if (!this.state.filtroPublicas){
+      dataFiltrada = dataFiltrada.filter(item => item.tipo_denuncia != 2)
+    }
+    if (!this.state.filtroPrivadas){
+      dataFiltrada = dataFiltrada.filter(item => item.tipo_denuncia != 1)
+    }
+    if (!this.state.filtroActivas){
+      dataFiltrada = dataFiltrada.filter(item => item.activa != 1)
+    }
+    if (!this.state.filtroInactivas){
+      dataFiltrada = dataFiltrada.filter(item => item.activa != 0)
+    }
+
     /* Este método sólo se ejecuta si isLoading es falso.
     Esto significa que se terminó de cargar la información. */
     return (
@@ -201,8 +217,9 @@ class AdministracionDenuncias extends React.Component {
         
         </View>
 
+        <View style={{marginBottom: 300}}>
         <FlatList
-            data={this.state.data}
+            data={dataFiltrada}
 
             // keyExtractor={(item, key) => item.idComercio}
             renderItem={({item, index}) => 
@@ -258,7 +275,8 @@ class AdministracionDenuncias extends React.Component {
                 </View>
               </TouchableHighlight> //Fin del item
             }
-          />
+        />
+        </View>
 
       </View>
     );
