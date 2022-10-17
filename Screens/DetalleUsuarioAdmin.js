@@ -21,11 +21,18 @@ class DetalleUsuarioAdmin extends React.Component {
     contrasena2: '',
     resultadoSubida: false,
     usuarioAdmin: false,
+    usuarioPasado: null,
   } 
 
   static navigationOptions = {
     title: 'Detalle de Usuario - CHML Mobile', 
   };
+
+  componentDidMount(){
+    this.setState({
+      usuarioPasado: this.props.navigation.state.params.usuario
+    })
+  }
 
   //Usar la siguiente función en el manejo del botón GuardarUsuario.
   _handleUploadUser = async () => {
@@ -44,7 +51,7 @@ class DetalleUsuarioAdmin extends React.Component {
 
       uploadResponse = await this.uploadUserAsync();
       uploadResult = uploadResponse.json();
-      if (uploadResult && uploadResult === 5){
+      if (uploadResult && uploadResult == 5){
         this.setState({
           resultadoSubida: true,
         })
@@ -61,13 +68,17 @@ class DetalleUsuarioAdmin extends React.Component {
   };
 
   async uploadUserAsync() {
-    let apiUrl = 'https://chmlmobile.chosmalal.net.ar/apiusuarios/v2/registrar_usuario.php';
+    let apiUrl = 'https://chmlmobile.chosmalal.net.ar/apiusuarios/v2/modificar_eliminar_usuario.php';
 
     let formData = new FormData();
     formData.append('mail', this.state.mail)
     formData.append('password', this.state.contrasena1)
     formData.append('apellidos', this.state.apellidos)
     formData.append('nombres', this.state.nombres)
+    formData.append('tipo_usuario', this.state.usuarioAdmin ? 2 : 1)
+    formData.append('id_usuario', this.state.usuarioPasado.idUsuario)
+    formData.append('id_usuario_admin', this.props.usuario.idUsuario)
+    formData.append('jwt_usuario_admin', this.props.usuario.jwt)
   
     let options = {
       method: 'POST',
@@ -101,29 +112,9 @@ class DetalleUsuarioAdmin extends React.Component {
     }
   }
 
-  guardarUsuario = async () => {
-    var formData = new FormData()
-    formData.append('mail', this.state.mail)
-    formData.append('password', this.state.contrasena1)
-    formData.append('apellidos', this.state.apellidos)
-    formData.append('nombres', this.state.nombres)
-    return await fetch('https://chmlmobile.chosmalal.net.ar/apiusuarios/v2/registrar_usuario.php', {
-      method: 'POST',
-      headers:{
-        'Accept':'application/json',
-        'Content-Type': 'multipart/form-data'
-      },
-      body: formData
-    })
-    .then((resp) =>
-      resp.json()
-    )
-    .catch((err) =>
-      console.log(err)
-    )
-  }
-
   render() {
+    //if uploading = true mostrar carga
+    //if resultadosubida = true cuenta regresiva.
     return (
       <View style = {styles.container}>
 

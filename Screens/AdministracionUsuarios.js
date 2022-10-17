@@ -186,7 +186,7 @@ class AdministracionUsuarios extends React.Component {
 
                   <View style={styles.botonesActivarEliminar}>
                   
-                    <TouchableHighlight style={[styles.button2, styles.facebook]} onPress={() => this.props.navigation.navigate('DetalleUsuarioAdmin', {accion: 'modificar', usuario: item})}>
+                    <TouchableHighlight style={[styles.button2, styles.facebook]} onPress={() => this.props.navigation.navigate('DetalleUsuarioAdmin', {usuario: item})}>
                       <View style={styles.buttoncontent}>
                         <Image style={styles.buttonImage}
                           source={require('../assets/editar.png')}
