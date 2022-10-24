@@ -158,7 +158,7 @@ export const usuarioLogInAction = (user) => {
         formData.append('password', user.password)
 
         //Ver nueva versión de esta API.
-        fetch('https://chmlmobile.chosmalal.net.ar/autenticar_usuario.php', {
+        fetch('https://chmlmobile.chosmalal.net.ar/apiusuarios/v2/autenticar_usuario.php', {
         method: 'POST',
         headers:{
             'Accept':'application/json',

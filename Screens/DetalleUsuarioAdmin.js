@@ -22,6 +22,9 @@ class DetalleUsuarioAdmin extends React.Component {
     resultadoSubida: false,
     usuarioAdmin: false,
     usuarioPasado: null,
+    subidaIntentada: false,
+    resultadoSubida: false,
+    accion: null,
   } 
 
   static navigationOptions = {
@@ -30,8 +33,22 @@ class DetalleUsuarioAdmin extends React.Component {
 
   componentDidMount(){
     this.setState({
-      usuarioPasado: this.props.navigation.state.params.usuario
+      accion: this.props.navigation.state.params.accion
     })
+
+    if (this.props.navigation.state.params.accion == 'editar'){
+      this.setState({
+        usuarioPasado: this.props.navigation.state.params.usuario
+      })
+    }
+  }
+
+  guardar_o_modificar = async () => {
+    if (this.state.accion == 'editar'){
+      this._handleUploadUser()
+    }else{
+      this.UploadNewUser()
+    }
   }
 
   //Usar la siguiente función en el manejo del botón GuardarUsuario.
@@ -46,7 +63,8 @@ class DetalleUsuarioAdmin extends React.Component {
 
     try {
       this.setState({
-        uploading: true
+        uploading: true,
+        //subidaIntentada: true
       });
 
       uploadResponse = await this.uploadUserAsync();
@@ -54,6 +72,7 @@ class DetalleUsuarioAdmin extends React.Component {
       if (uploadResult && uploadResult == 5){
         this.setState({
           resultadoSubida: true,
+          subidaIntentada: true,
         })
       }else{
         alert('Error, intente nuevamente. Asegúrese de estar conectado a internet.')
@@ -71,12 +90,74 @@ class DetalleUsuarioAdmin extends React.Component {
     let apiUrl = 'https://chmlmobile.chosmalal.net.ar/apiusuarios/v2/modificar_eliminar_usuario.php';
 
     let formData = new FormData();
+
     formData.append('mail', this.state.mail)
     formData.append('password', this.state.contrasena1)
     formData.append('apellidos', this.state.apellidos)
     formData.append('nombres', this.state.nombres)
     formData.append('tipo_usuario', this.state.usuarioAdmin ? 2 : 1)
     formData.append('id_usuario', this.state.usuarioPasado.idUsuario)
+    formData.append('id_usuario_admin', this.props.usuario.idUsuario)
+    formData.append('jwt_usuario_admin', this.props.usuario.jwt)
+    formData.append('operacion', 1) //Tipo Operación: 1 es modificar, 2 es eliminar.
+  
+    let options = {
+      method: 'POST',
+      body: formData,
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'multipart/form-data',
+      },
+    };
+
+    return fetch(apiUrl, options);
+  }
+
+  //Usar la siguiente función en el manejo del botón Guardar Usuario.
+  UploadNewUser = async () => {
+    //En primer lugar, reviso que se hayan completado todos los datos.
+    if (!this.validarDatos){
+      alert('Error. Revise que todos los campos estén completos y sean correctos e intente nuevamente.')
+      return false
+    }
+
+    let uploadResponse, uploadResult;
+
+    try {
+      this.setState({
+        uploading: true,
+        //subidaIntentada: true
+      });
+
+      uploadResponse = await this.uploadNewUserAsync();
+      uploadResult = uploadResponse.json();
+      if (uploadResult && uploadResult == 5){
+        this.setState({
+          resultadoSubida: true,
+          subidaIntentada: true,
+        })
+      }else{
+        alert('Error, intente nuevamente. Asegúrese de estar conectado a internet.')
+      }
+    } catch (e) {
+      alert('Error. Asegúrese de estar conectado a internet y de que todos los datos estén cargados.');
+    } finally {
+      this.setState({
+        uploading: false
+      });
+    }
+  };
+
+  async uploadNewUserAsync() {
+    let apiUrl = 'https://chmlmobile.chosmalal.net.ar/apiusuarios/v2/registrar_usuario.php';
+
+    let formData = new FormData();
+
+    formData.append('mail', this.state.mail)
+    formData.append('password', this.state.contrasena1)
+    formData.append('apellidos', this.state.apellidos)
+    formData.append('nombres', this.state.nombres)
+    formData.append('perfil_usuario', this.state.usuarioAdmin ? 2 : 1)
     formData.append('id_usuario_admin', this.props.usuario.idUsuario)
     formData.append('jwt_usuario_admin', this.props.usuario.jwt)
   
@@ -113,12 +194,61 @@ class DetalleUsuarioAdmin extends React.Component {
   }
 
   render() {
-    //if uploading = true mostrar carga
+    //if uploading = true mostrar carga.
+    if (this.state.isLoading) {
+      return (
+        <View style={{margin: 20, flexDirection: 'column', alignItems: 'center'}}>
+          <Image style={{
+            margin: 20, width: 60, height: 60}}
+            source={require('../assets/usuario_admin.png')}
+          />
+          <Text style={{
+            margin:10, padding: 10, backgroundColor: 'coral', borderColor: 'blue', borderWidth: 1,
+            borderRadius: 4, fontWeight: 'bold', fontSize: 10
+            }}>
+            Guardando Usuario...
+          </Text>
+          <ActivityIndicator size= "large" color='#0000ff'/>
+        </View>
+
+      );
+    }
     //if resultadosubida = true cuenta regresiva.
+
+    /* Este método sólo se ejecuta si uploading es falso.
+    Esto significa que se terminó de cargar la información o no se ha iniciado la subida. */
+    if (this.state.subidaIntentada) { //Se ha intentado subir la información.
+      if (this.state.resultadoSubida){ //La información se subió exitosamente.
+        return (
+          <View style = {styles.container}>
+          
+          <Text style={styles.portadaText}>
+            El usuario ha sido modificado/guardado exitosamente.{"\n"}
+            Será redirigido a la pantalla de administración de usuarios...
+          </Text>
+          
+          <CountDown
+            size={30}
+            until={5}
+            onFinish={() => this.props.navigation.navigate('AdministracionUsuarios')}
+            onPress={() => this.props.navigation.navigate('AdministracionUsuarios')}
+            digitStyle={{backgroundColor: '#FFF', borderWidth: 2, borderColor: '#1CC625'}}
+            digitTxtStyle={{color: '#1CC625'}}
+            timeLabelStyle={{color: 'red', fontWeight: 'bold'}}
+            separatorStyle={{color: '#1CC625'}}
+            timeToShow={['S']}
+            timeLabels={{s: null}}
+          />
+
+          </View>
+        )
+      }
+    }
+
     return (
       <View style = {styles.container}>
 
-          <Text style={styles.portadaText}>Registro de Usuarios - CHML Mobile</Text>
+          <Text style={styles.portadaText}>Registro / Modificación de Usuarios - CHML Mobile</Text>
           <Text style={styles.portadaText}>Usuario Administrador</Text>
           
           <Image style={styles.portadaImage}
@@ -245,7 +375,7 @@ class DetalleUsuarioAdmin extends React.Component {
             />
           </View>
 
-          <TouchableHighlight style={[styles.buttonHorizontal, styles.facebook]} onPress={() => this._handleUploadUser()}>
+          <TouchableHighlight style={[styles.buttonHorizontal, styles.facebook]} onPress={() => this.guardar_o_modificar()}>
             <View style={styles.buttoncontent}>
               <Image style={styles.buttonImage}
                 source={require('../assets/ok.png')}

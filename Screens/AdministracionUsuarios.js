@@ -25,8 +25,27 @@ class AdministracionUsuarios extends React.Component {
       });
   }
 
-  //Usar la siguiente función en el manejo del activar/desactivar o eliminar delivery.
-  _handleUpload = async (usuarioId, stateChange) => {
+  eliminarUsuario = async (usuario) => {
+    let resultado = false
+
+    Alert.alert(
+      "Eliminar Usuario",
+      "Está seguro de que desea eliminar el usuario?",
+      [
+        {
+          text: "Cancelar",
+          onPress: () => {resultado = false},
+          style: "cancel"
+        },
+        { text: "Confirmar", onPress: await this.eliminarUsuarioAsync(usuario) }
+      ],
+      { cancelable: false }
+    )
+    //console.log(resultado)
+    return resultado
+  }
+
+  eliminarUsuarioAsync = async (usuario) => {
     let uploadResponse, uploadResult;
 
     try {
@@ -34,14 +53,15 @@ class AdministracionUsuarios extends React.Component {
         uploading: true
       });
 
-      uploadResponse = await this.uploadChangesAsync(usuarioId, stateChange);
-      uploadResult = await uploadResponse.json();
-      
+      uploadResponse = await this.uploadChangesAsyncUsuario(usuario);
+      uploadResult = uploadResponse.json();
+
       //console.log(uploadResult);
-      if (uploadResult && uploadResult === 1){
+      if (uploadResult && uploadResult == 5){
         this.setState({
-          resultadoSubida: true,
+          data: data.filter(item => item.idUsuario != usuario.idUsuario),
         })
+        alert('El usuario se eliminó correctamente.');
       }
       //console.log({ uploadResult });
       //alert(uploadResult.stringify())
@@ -55,28 +75,28 @@ class AdministracionUsuarios extends React.Component {
         uploading: false
       });
     }
-  };
+  }
 
-  async uploadChangesAsync(usuarioId, stateChange) {
-    let apiUrl = 'https://delivery.chosmalal.net.ar/modificar_eliminar_usuario.php';
-    
+  async uploadChangesAsyncUsuario(usuario) {
+    let apiUrl = 'https://chmlmobile.chosmalal.net.ar/apiusuarios/v2/modificar_eliminar_usuario.php';
+
     let formData = new FormData();
-    formData.append('usuarioId', usuarioId) //Usuario a modificar.
-    formData.append('tipoDeCambio', stateChange)
-    formData.append('id_usuario', this.props.usuario.idUsuario) //Usuario que realiza la modificación.
-    formData.append('jwt', this.props.usuario.jwt)
+
+    formData.append('mail', usuario.mail)
+    formData.append('id_usuario', usuario.idUsuario)
+    formData.append('id_usuario_admin', this.props.usuario.idUsuario)
+    formData.append('jwt_usuario_admin', this.props.usuario.jwt)
+    formData.append('operacion', 2) //Tipo Operación: 1 es modificar, 2 es eliminar.
   
     let options = {
       method: 'POST',
       body: formData,
       headers: {
-        'Accept':'application/json',
-        'Content-Type': 'multipart/form-data'
+        Accept: 'application/json',
+        'Content-Type': 'multipart/form-data',
       },
     };
 
-    //console.log('A PUNTO DE LLAMAR A LA API CON LAS SIG. OPCIONES:')
-    //console.log(options)
     return fetch(apiUrl, options);
   }
 
@@ -186,7 +206,7 @@ class AdministracionUsuarios extends React.Component {
 
                   <View style={styles.botonesActivarEliminar}>
                   
-                    <TouchableHighlight style={[styles.button2, styles.facebook]} onPress={() => this.props.navigation.navigate('DetalleUsuarioAdmin', {usuario: item})}>
+                    <TouchableHighlight style={[styles.button2, styles.facebook]} onPress={() => this.props.navigation.navigate('DetalleUsuarioAdmin', {accion: 'editar', usuario: item})}>
                       <View style={styles.buttoncontent}>
                         <Image style={styles.buttonImage}
                           source={require('../assets/editar.png')}
@@ -197,7 +217,7 @@ class AdministracionUsuarios extends React.Component {
                       </View>
                     </TouchableHighlight>
 
-                    <TouchableHighlight style={[styles.button2, styles.facebook]} onPress={() => this.props.navigation.navigate('DeliveryMain')}>
+                    <TouchableHighlight style={[styles.button2, styles.facebook]} onPress={(item) => this.eliminarUsuario(item)}>
                       <View style={styles.buttoncontent}>
                         <Image style={styles.buttonImage}
                           source={require('../assets/papelera.png')}

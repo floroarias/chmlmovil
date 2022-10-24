@@ -83,7 +83,8 @@ class DetalleNuevoDelivery extends React.Component {
 
     try {
       this.setState({
-        uploading: true
+        uploading: true,
+        subidaIntentada: true,
       });
 
       uploadResponse = await this.uploadImageAsync(this.state.imagenLogo.uri);
@@ -91,16 +92,17 @@ class DetalleNuevoDelivery extends React.Component {
       
       //console.log(uploadResult);
       if (uploadResult){
-        if (uploadResult === 1){//Subida exitosa
+        if (uploadResult == 1){//Subida exitosa
           this.setState({
             resultadoSubida: true, //Subida correcta.
             subidaIntentada: true, //Se realizó intento de subir la información.
           })
         }else{
-          this.setState({
-            resultadoSubida: false, //Subida incorrecta
-            subidaIntentada: true, //Se realizó intento de subir la información.
-          })
+          alert('Error en la carga. Asegúrese de estar conectado a internet y de que todos los datos estén cargados.');
+          //this.setState({
+            //resultadoSubida: false, //Subida incorrecta
+            //subidaIntentada: true, //Se realizó intento de subir la información.
+          //})
         }
       }
       //console.log({ uploadResult });
@@ -278,8 +280,6 @@ class DetalleNuevoDelivery extends React.Component {
 
           </View>
         )
-      }else{
-        alert('No se puedo registrar el nuevo delivery. Revise su conexión a internet.');
       }
     }
 
