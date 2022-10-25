@@ -33,23 +33,58 @@ class AdministracionDeliverys extends React.Component {
     return (listItems)
   }
 
+  activarDesactivarComercio = (item, stateChange, deliveryId) => {
+    let activo = stateChange == 2 ? 1 : 0 //stateChange: 2 ES ACTIVAR, 3 es DESACTIVAR.
+    let comercio = item
+    if (item.idcomercio == deliveryId){
+      comercio.activo = activo
+      return comercio
+    }
+    
+    return comercio
+  }
+
   //Usar la siguiente función en el manejo del activar/desactivar o eliminar delivery.
   _handleUpload = async (deliveryId, stateChange) => {
+    //stateChange: 1 ES ELIMINAR, 2 ES ACTIVAR, 3 es DESACTIVAR.
+    if (stateChange == 1){
+      Alert.alert(
+        "Eliminar Delivery",
+        "Está seguro de que desea eliminar el comercio?",
+        [
+          {
+            text: "Cancelar",
+            onPress: () => {return false},
+            style: "cancel"
+          },
+          { text: "Confirmar", onPress: () => {} }
+        ],
+        { cancelable: false }
+      )
+    }
+
     let uploadResponse, uploadResult;
 
     try {
       this.setState({
-        uploading: true
+        isLoading: true
       });
 
       uploadResponse = await this.uploadChangesAsync(deliveryId, stateChange);
-      uploadResult = await uploadResponse.json();
+      uploadResult = uploadResponse.json();
       
       //console.log(uploadResult);
-      if (uploadResult && uploadResult === 1){
-        this.setState({
-          resultadoSubida: true,
-        })
+      if (uploadResult && uploadResult == 1){
+        if (stateChange == 1){
+          this.setState({
+            data: data.filter(item => item.idcomercio != deliveryId)
+          });
+        }else{
+            this.setState({
+              data: data.map(item => activarDesactivarComercio(item, stateChange, deliveryId))
+            });
+        }
+        alert('La operación se ha realizado exitosamente.');
       }
       //console.log({ uploadResult });
       //alert(uploadResult.stringify())
@@ -60,7 +95,7 @@ class AdministracionDeliverys extends React.Component {
       alert('Error. Asegúrese de estar conectado a internet.');
     } finally {
       this.setState({
-        uploading: false
+        isLoading: false
       });
     }
   };
@@ -121,7 +156,7 @@ class AdministracionDeliverys extends React.Component {
       dataFiltrada = dataFiltrada.filter(item => item.activo != 1)
     }
     if (!this.state.filtroInactivos){
-      dataFiltrada = dataFiltrada.filter(item => item.tipo_denuncia != 0)
+      dataFiltrada = dataFiltrada.filter(item => item.activo != 0)
     }
     /* Este método sólo se ejecuta si isLoading es falso.
     Esto significa que se terminó de cargar la información. */
@@ -177,7 +212,7 @@ class AdministracionDeliverys extends React.Component {
 
                   <View style={styles.botonesActivarEliminar}>{/* Botones de activar/desactivar y eliminar */}
                     
-                    <TouchableHighlight style={[styles.button2, styles.facebook]} onPress={() => this.props.navigation.navigate('DeliveryMain')}>
+                    <TouchableHighlight style={[styles.button2, styles.facebook]} onPress={item.activo == 1 ? (item) => this._handleUpload(item, 3) : (item) => this._handleUpload(item, 2)}>
                       <View style={styles.buttoncontent}>
                         <Image style={styles.buttonImage}
                           resizeMethod={'resize'}
@@ -190,7 +225,7 @@ class AdministracionDeliverys extends React.Component {
                       </View>
                     </TouchableHighlight>
 
-                    <TouchableHighlight style={[styles.button2, styles.facebook]} onPress={() => this.props.navigation.navigate('DeliveryMain')}>
+                    <TouchableHighlight style={[styles.button2, styles.facebook]} onPress={(item) => this._handleUpload(item, 1)}>
                       <View style={styles.buttoncontent}>
                         <Image style={styles.buttonImage}
                           source={require('../assets/papelera.png')}
