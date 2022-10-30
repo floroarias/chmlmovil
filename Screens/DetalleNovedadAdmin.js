@@ -45,7 +45,7 @@ class DetalleNovedadAdmin extends React.Component {
       
       //console.log(uploadResult);
       if (uploadResult){
-        if (uploadResult === 1){//Subida exitosa
+        if (uploadResult == 5){//Subida exitosa
           this.setState({
             resultadoSubida: true, //Subida correcta.
             subidaIntentada: true, //Se realizó intento de subir la información.
@@ -72,7 +72,7 @@ class DetalleNovedadAdmin extends React.Component {
   };
 
   async uploadImageAsync(uri) {
-    let apiUrl = 'https://chmlmobile.chosmalal.net.ar/apinovedades/v1/subir_novedad.php';
+    let apiUrl = 'https://chmlmobile.chosmalal.net.ar/novedades/subir_novedad.php';
     
     let uriParts = uri.split('.');
     let fileType = uriParts[uriParts.length - 1];
@@ -87,8 +87,10 @@ class DetalleNovedadAdmin extends React.Component {
       name: `novedadMobile.${fileType}`,
       type: `image/${auxExt}`,
     });
+
     formData.append('comentarios', this.state.comentarios)
-    formData.append('jwt', this.props.usuario.jwt)
+    formData.append('id_usuario_admin', this.props.usuario.idUsuario)
+    formData.append('jwt_usuario_admin', this.props.usuario.jwt)
   
     let options = {
       method: 'POST',

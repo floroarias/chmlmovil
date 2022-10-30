@@ -21,9 +21,11 @@ class AdministracionNovedades extends React.Component {
         
         Object.values(responseJson).forEach((item) => {
           let imagen = 'https://chmlmobile.chosmalal.net.ar/novedades/' + item.nombre_imagen
+          let nombreImagen = item.nombre_imagen
           let fecha = item.fecha.substring(8,10) + '/' + item.fecha.substring(5,7) + '/' + item.fecha.substring(0,4)
           let observaciones = item.observaciones
-          let objeto = {imagen: imagen, fecha: fecha, observaciones: observaciones}
+          let idNovedad = item.id
+          let objeto = {imagen: imagen, fecha: fecha, observaciones: observaciones, idNovedad: idNovedad, nombreImagen: nombreImagen}
           dataSource = dataSource.concat(objeto);
         });
 
@@ -36,23 +38,37 @@ class AdministracionNovedades extends React.Component {
   }
 
   //Usar la siguiente función en el manejo de eliminar novedad.
-  _handleUpload = async (novedadId) => {
+  _handleDelete = async (novedad) => {
+      Alert.alert(
+        "Eliminar Novedad",
+        "Está seguro de que desea eliminar la novedad?",
+        [
+          {
+            text: "Cancelar",
+            onPress: () => {return false},
+            style: "cancel"
+          },
+          { text: "Confirmar", onPress: () => {} }
+        ],
+        { cancelable: false }
+      )
+
     let uploadResponse, uploadResult;
 
     try {
       this.setState({
-        uploading: true
+        isLoading: true
       });
 
-      uploadResponse = await this.uploadChangesAsync(novedadId);
-      uploadResult = await uploadResponse.json();
+      uploadResponse = await this.uploadChangesAsync(novedad);
+      uploadResult = uploadResponse.json();
       
       //console.log(uploadResult);
-      if (uploadResult && uploadResult === 1){
+      if (uploadResult && uploadResult == 1){
         this.setState({
-          resultadoSubida: true,
-          isLoading: true, //Para obligar a recargar la info
-        })
+          data: data.filter(item => item.idNovedad != novedad.idNovedad)
+        });
+        alert('La operación se ha realizado exitosamente.');
       }
       //console.log({ uploadResult });
       //alert(uploadResult.stringify())
@@ -63,18 +79,19 @@ class AdministracionNovedades extends React.Component {
       alert('Error. Asegúrese de estar conectado a internet.');
     } finally {
       this.setState({
-        uploading: false
+        isLoading: false
       });
     }
   };
 
-  async uploadChangesAsync(novedadId) {
-    let apiUrl = 'https://chmlmobile.chosmalal.net.ar/novedades/apinovedades/v1/eliminar_novedad.php';
+  async uploadChangesAsync(novedad) {
+    let apiUrl = 'https://chmlmobile.chosmalal.net.ar/novedades/eliminar_novedad.php';
     
     let formData = new FormData();
-    formData.append('novedadId', novedadId)
-    formData.append('id_usuario', this.props.usuario.idUsuario)
-    formData.append('jwt', this.props.usuario.jwt)
+    formData.append('novedadId', novedad.idNovedad)
+    formData.append('nombre_imagen', novedad.nombreImagen)
+    formData.append('id_usuario_admin', this.props.usuario.idUsuario)
+    formData.append('jwt_usuario_admin', this.props.usuario.jwt)
   
     let options = {
       method: 'POST',
@@ -165,7 +182,7 @@ class AdministracionNovedades extends React.Component {
                   </View>
 
                   <View>{/* Botón de eliminar */}
-                    <TouchableHighlight style={[styles.button2, styles.facebook]} onPress={() => this.props.navigation.navigate('DeliveryMain')}>
+                    <TouchableHighlight style={[styles.button2, styles.facebook]} onPress={(item) => this._handleDelete(item)}>
                       <View style={styles.buttoncontent}>
                         <Image style={styles.buttonImage}
                           source={require('../assets/papelera.png')}

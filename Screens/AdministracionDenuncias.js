@@ -60,26 +60,68 @@ class AdministracionDenuncias extends React.Component {
     }
   }
 
-  //Usar la siguiente función en el manejo del cambio de estado pública/privada o activa/inactiva.
-  _handleUpload = async (denunciaId, stateChange) => { //stateChange: 1=cambiar publico/privado; 2=activar/desactivar.
+  //Si la denuncia es la indicada en el id, cambia su estado (activa/inactiva) o su tipo de publicidad (pública/privada).
+  //Si no lo es, devuelve el objeto sin cambios.
+  //1 es privada, 2 es pública.
+  cambioActivaCambioPublicaDenuncia = (denuncia, stateChange, denunciaId) => {
+    if (denuncia.id_denuncia != denunciaId){
+      return denuncia
+    }
+    if (stateChange == 2){
+      denuncia.activa = denuncia.activa == 1 ? 0 : 1 // ACTIVO/DESACTIVO.
+      return denuncia
+    }
+
+    if (stateChange == 3){
+      denuncia.tipo_denuncia = denuncia.tipo_denuncia == 1 ? 2 : 1 // PÚBLICA/PRIVADA. 1 es privada, 2 es pública.
+      return denuncia
+    }
+        
+    return denuncia
+  }
+
+  //Usar la siguiente función en el manejo del cambio de estado pública/privada o activa/inactiva y de la eliminación también.
+  _handleUpload = async (denuncia, stateChange) => {
+    //stateChange: 1 ES ELIMINAR, 2 ES ACTIVAR/DESACTIVAR, 3 es PUBLICA/PRIVADA.
+    if (stateChange == 1){
+      Alert.alert(
+        "Eliminar Denuncia",
+        "Está seguro de que desea eliminar la denuncia?",
+        [
+          {
+            text: "Cancelar",
+            onPress: () => {return false},
+            style: "cancel"
+          },
+          { text: "Confirmar", onPress: () => {} }
+        ],
+        { cancelable: false }
+      )
+    }
+
     let uploadResponse, uploadResult;
 
     try {
       this.setState({
-        uploading: true
+        isLoading: true
       });
 
-      uploadResponse = await this.uploadChangesAsync(denunciaId, stateChange);
+      uploadResponse = await this.uploadChangesAsync(denuncia, stateChange);
       uploadResult = await uploadResponse.json();
       
       //console.log(uploadResult);
-      if (uploadResult && uploadResult == 1){
-        this.setState({
-          resultadoSubida: true,
-        })
+      if (uploadResult && uploadResult == 5){
+        if (stateChange == 1){ //Si era una eliminación, quito el objeto del listado.
+          this.setState({
+            data: data.filter(item => item.id_denuncia != denuncia.id_denuncia)
+          });
+        }else{ //Si era un cambio de estado, actualizo el objeto en el listado.
+            this.setState({
+              data: data.map(item => cambioActivaCambioPublicaDenuncia(item, stateChange, denuncia.id_denuncia))
+            });
+        }
+        alert('La operación se ha realizado exitosamente.');
       }
-      //console.log({ uploadResult });
-      //alert(uploadResult.stringify())
     } catch (e) {
       //console.log(uploadResponse);
       //console.log({ uploadResult });
@@ -87,19 +129,21 @@ class AdministracionDenuncias extends React.Component {
       alert('Error. Asegúrese de estar conectado a internet.');
     } finally {
       this.setState({
-        uploading: false
+        isLoading: false
       });
     }
   };
 
-  async uploadChangesAsync(denunciaId, stateChange) {
+  async uploadChangesAsync(denuncia, stateChange) {
     let apiUrl = 'https://chmlmobile.chosmalal.net.ar/denuncias/modificar_eliminar_denuncia.php';
     
     let formData = new FormData();
-    formData.append('denunciaId', denunciaId)
+    formData.append('denunciaId', denuncia.id_denuncia)
     formData.append('tipoDeCambio', stateChange)
-    formData.append('id_usuario', this.props.usuario.idUsuario)
-    formData.append('jwt', this.props.usuario.jwt)
+    formData.append('activa', denuncia.activa) //1 activa, 0 inactiva.
+    formData.append('tipo_denuncia', denuncia.tipo_denuncia) //1 privada, 2 pública.
+    formData.append('id_usuario_admin', this.props.usuario.idUsuario)
+    formData.append('jwt_usuario_admin', this.props.usuario.jwt)
   
     let options = {
       method: 'POST',
@@ -255,8 +299,9 @@ class AdministracionDenuncias extends React.Component {
                   </View>
 
                   <View style={styles.botonesCostadoJuntos}>
+                  
                   <View style={styles.botonesCostado}>
-                  <TouchableHighlight onPress={() => this._handleUpload(item.id_denuncia, 1)}>
+                  <TouchableHighlight onPress={() => this._handleUpload(item, 3)}>
                   <Text style={styles.buttonTextPequeño2}>
                       {item.tipo_denuncia == '1' ? 'Marcar como Pública' : 'Marcar como Privada'}
                   </Text>
@@ -264,12 +309,21 @@ class AdministracionDenuncias extends React.Component {
                   </View>
                   
                   <View style={styles.botonesCostado}>
-                  <TouchableHighlight onPress={() => this._handleUpload(item.id_denuncia, 2)}>
+                  <TouchableHighlight onPress={() => this._handleUpload(item, 2)}>
                   <Text style={styles.buttonTextPequeño2}>
                       {item.activa == '1' ? 'Desactivar' : 'Activar'}
                   </Text>
                   </TouchableHighlight>
                   </View>
+
+                  <View style={styles.botonesCostado}>
+                  <TouchableHighlight onPress={() => this._handleUpload(item, 1)}>
+                  <Text style={styles.buttonTextPequeño2}>
+                      Eliminar
+                  </Text>
+                  </TouchableHighlight>
+                  </View>
+
                   </View>
                 
                 </View>
@@ -401,7 +455,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   botonesCostado: {
-    width: WIDTH*0.40,
+    width: WIDTH*0.30,
     height: 60,
     borderRadius: 5,
     borderWidth: 1,

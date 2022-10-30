@@ -33,6 +33,8 @@ class AdministracionDeliverys extends React.Component {
     return (listItems)
   }
 
+  //Si el comercio es el indicado en el id, cambia su estado (activo/inactivo).
+  //Si no lo es, devuelve el objeto sin cambios.
   activarDesactivarComercio = (item, stateChange, deliveryId) => {
     let activo = stateChange == 2 ? 1 : 0 //stateChange: 2 ES ACTIVAR, 3 es DESACTIVAR.
     let comercio = item
@@ -74,12 +76,12 @@ class AdministracionDeliverys extends React.Component {
       uploadResult = uploadResponse.json();
       
       //console.log(uploadResult);
-      if (uploadResult && uploadResult == 1){
-        if (stateChange == 1){
+      if (uploadResult && uploadResult == 5){
+        if (stateChange == 1){ //Si era una eliminación, quito el objeto del listado.
           this.setState({
             data: data.filter(item => item.idcomercio != deliveryId)
           });
-        }else{
+        }else{ //Si era un cambio de estado, actualizo el objeto en el listado.
             this.setState({
               data: data.map(item => activarDesactivarComercio(item, stateChange, deliveryId))
             });

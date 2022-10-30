@@ -1,3 +1,5 @@
+//BACKUP: EN ESTA OPCIÓN SE CONSIDERÓ USAR REDUX, EN LA OTRA UNA SOLA PANTALLA CON FUNCIONES COMUNES.
+//
 //Esta página de login es para que un usuario registrado en la BD pueda iniciar sesión.
 //También tiene un enlace para que el usuario no registrado pueda completar sus datos y registrarse,
 //y para que el usuario registrado que haya olvidado su contraseña, pueda recuperarla desde su correo.
@@ -5,7 +7,7 @@ import React from 'react';
 import { 
   StyleSheet, Text, View, TouchableOpacity, 
   Alert, Image, TextInput, TouchableHighlight,
-  Dimensions, KeyboardAvoidingView, ActivityIndicator
+  Dimensions, KeyboardAvoidingView 
 } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -21,19 +23,7 @@ class Login extends React.Component {
       showPass: true,
       press: false,
       mail: '',
-      password: '',
-      passwordNuevo1: '',
-      passwordNuevo2: '',
-      olvidoPassword: false,
-      seIntentaVerificarMail: false,
-      seIntentaVerificarCodigo: false,
-      seIntentaCambiarPassword: false,
-      respuestaServerMailExiste: false,
-      respuestaServerCodigoExiste: false,
-      respuestaServerCambiarPassword: false,
-      codigoEnviado: false,
-      cargando: false,
-      codigo: '',
+      password: ''
     }
 
   static navigationOptions = {
@@ -67,192 +57,10 @@ class Login extends React.Component {
     }
   }
 
-  verificarMail = async (mail) => {
-    if (!this.verificaFormatoMail){
-      alert('El formato de correo ingresado es incorrecto.')
-      return false
-    }
-    
-    let uploadResponse, uploadResult;
-
-    try {
-      this.setState({
-        cargando: true,
-        seIntentaVerificarMail: true,
-      });
-
-      uploadResponse = await this.verificarMailAsync(mail);
-      uploadResult = uploadResponse.json();
-
-      //console.log(uploadResult);
-      if (uploadResult && uploadResult == 5){
-        this.setState({
-          cargando: false,
-          respuestaServerMailExiste: true,
-          codigoEnviado: true,
-        })
-        alert('El correo se verificó correctamente. A continuación, ingrese el código enviado al mismo.');
-      }
-      //console.log({ uploadResult });
-      //alert(uploadResult.stringify())
-    } catch (e) {
-      //console.log(uploadResponse);
-      //console.log({ uploadResult });
-      //console.log(e);
-      alert('Error. Asegúrese de estar conectado a internet y de que el correo esté registrado.');
-    } finally {
-      this.setState({
-        cargando: false
-      });
-    }
-  }
-
-  async verificarMailAsync(mail) {
-    let apiUrl = 'https://chmlmobile.chosmalal.net.ar/apiusuarios/v3/cambio_password/verifica_existe_mail.php';
-
-    let formData = new FormData();
-
-    formData.append('mail', mail)
-  
-    let options = {
-      method: 'POST',
-      body: formData,
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'multipart/form-data',
-      },
-    };
-
-    return fetch(apiUrl, options);
-  }
-
-  verificarCodigo = async (mail, codigo) => {
-    let uploadResponse, uploadResult;
-
-    try {
-      this.setState({
-        cargando: true,
-        seIntentaVerificarCodigo: true,
-      });
-
-      uploadResponse = await this.verificarCodigoAsync(mail, codigo);
-      uploadResult = uploadResponse.json();
-
-      //console.log(uploadResult);
-      if (uploadResult && uploadResult == 5){
-        this.setState({
-          cargando: false,
-          respuestaServerCodigoExiste: true,
-        })
-        alert('El código es correcto. A continuación, ingrese su nueva contraseña.');
-      }
-      //console.log({ uploadResult });
-      //alert(uploadResult.stringify())
-    } catch (e) {
-      //console.log(uploadResponse);
-      //console.log({ uploadResult });
-      //console.log(e);
-      alert('Error. Asegúrese de estar conectado a internet y de que el código sea correcto.');
-    } finally {
-      this.setState({
-        cargando: false
-      });
-    }
-  }
-
-  async verificarCodigoAsync(mail, codigo) {
-    let apiUrl = 'https://chmlmobile.chosmalal.net.ar/apiusuarios/v3/cambio_password/chequeo_codigo_cambio_pass.php';
-
-    let formData = new FormData();
-
-    formData.append('mail', mail)
-    formData.append('codigo', codigo)
-  
-    let options = {
-      method: 'POST',
-      body: formData,
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'multipart/form-data',
-      },
-    };
-
-    return fetch(apiUrl, options);
-  }
-
-  cambiarPassword = async (mail, codigo, nuevaClave) => {
-    let uploadResponse, uploadResult;
-
-    try {
-      this.setState({
-        cargando: true,
-        seIntentaCambiarPassword: true,
-      });
-
-      uploadResponse = await this.cambiarPasswordAsync(mail, codigo, nuevaClave);
-      uploadResult = uploadResponse.json();
-
-      //console.log(uploadResult);
-      if (uploadResult && uploadResult == 5){
-        this.setState({
-          cargando: false,
-          respuestaServerCambiarPassword: true,
-        })
-        alert('El cambio de clave ha sido exitoso. A continuación, inicie sesión.');
-      }
-      //console.log({ uploadResult });
-      //alert(uploadResult.stringify())
-    } catch (e) {
-      //console.log(uploadResponse);
-      //console.log({ uploadResult });
-      //console.log(e);
-      alert('Error. Asegúrese de estar conectado a internet.');
-    } finally {
-      this.setState({
-        cargando: false
-      });
-    }
-  }
-
-  async cambiarPasswordAsync(mail, codigo, nuevaClave) {
-    let apiUrl = 'https://chmlmobile.chosmalal.net.ar/apiusuarios/v3/cambio_password/cambia_pass.php';
-
-    let formData = new FormData();
-
-    formData.append('mail', mail)
-    formData.append('codigo', codigo)
-    formData.append('nueva_clave', nuevaClave)
-  
-    let options = {
-      method: 'POST',
-      body: formData,
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'multipart/form-data',
-      },
-    };
-
-    return fetch(apiUrl, options);
-  }
-
   render() {
-    if (this.state.cargando){
-      return (
-        <View style={{margin: 20, flexDirection: 'column', alignItems: 'center'}}>
-          <Image style={{
-            margin: 20, width: 60, height: 60}}
-            source={require('../assets/novedades.png')}
-          />
-          <Text style={{
-            margin:10, padding: 10, backgroundColor: 'coral', borderColor: 'blue', borderWidth: 1,
-            borderRadius: 4, fontWeight: 'bold', fontSize: 10
-            }}>
-            Consultando al Servidor...
-          </Text>
-          <ActivityIndicator size= "large" color='#0000ff'/>
-        </View>
-
-      );
+    //console.log(this.props)
+    if (!this.props.usuarioRegistrado && this.props.respuestaServerMailExiste == 1){
+      this.props.navigation.navigate('OlvidoPassword')
     }
 
     let botonAdministrador
@@ -272,7 +80,6 @@ class Login extends React.Component {
     }
 
     let pantalla
-
     if (this.props.usuarioRegistrado){
       
       let leyendaAdmin
@@ -432,6 +239,14 @@ class Login extends React.Component {
     this.props.loginFN({mail: this.state.mail, password: this.state.password})
   }
 
+  verificarMailExisteEnServer() {
+    if (!this.verificaFormatoMail()){
+      alert('Debe ingresar su correo electrónico registrado para realizar esta acción.')
+      return false
+    }
+    this.props.verificaMailFN(this.state.mail)
+  }
+
   validarDatos = () => {
     let expresionRegularMail = /^.+@.+\.[a-zA-Z]+$/;
     return (expresionRegularMail.exec(this.state.mail) && this.state.password.length > 4)
@@ -448,6 +263,8 @@ const mapStateToProps = state => {
   return {
     usuarioRegistrado: state.usuarioLogInOut.usuarioRegistrado,
     usuario: state.usuarioLogInOut.usuario,
+    mailOlvidoPassword: state.verificarMail.mailOlvidoPass,
+    respuestaServerMailExiste: state.verificarMail.respuestaServerMailExiste
   }
 }
 
@@ -455,6 +272,7 @@ const mapDispatchToProps = dispatch => {
   return {
     logoutFN: () => dispatch(usuarioLogOutAction()),
     loginFN: (usuario) => dispatch(usuarioLogInAction(usuario)),
+    verificaMailFN: (mail) => dispatch(verificarExisteMailAction(mail))
   }
 }
 
