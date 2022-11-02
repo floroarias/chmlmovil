@@ -12,7 +12,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux';
 import { usuarioLogInAction } from '../redux/ActionCreators';
 import { usuarioLogOutAction } from '../redux/ActionCreators';
-import { verificarExisteMailAction } from '../redux/ActionCreators';
 
 const {width: WIDTH} = Dimensions.get('window');
 
@@ -68,11 +67,30 @@ class Login extends React.Component {
   }
 
   verificarMail = async (mail) => {
-    if (!this.verificaFormatoMail){
-      alert('El formato de correo ingresado es incorrecto.')
+    if (!this.verificaFormatoMail || this.state.mail.length == 0){
+      alert('El formato de correo ingresado es incorrecto o no ha ingresado su mail.')
       return false
     }
+
+    let continuar = true
+    Alert.alert(
+      "Cambio de clave",
+      "Se enviará un código de cambio de clave al correo electrónico ingresado. Desea continuar?",
+      [
+        {
+          text: "Cancelar",
+          onPress: () => {continuar = false},
+          style: "cancel"
+        },
+        { text: "Confirmar", onPress: () => {} }
+      ],
+      { cancelable: false }
+    )
     
+    if (!continuar){
+      return false
+    }
+
     let uploadResponse, uploadResult;
 
     try {
@@ -88,6 +106,7 @@ class Login extends React.Component {
       if (uploadResult && uploadResult == 5){
         this.setState({
           cargando: false,
+          seIntentaVerificarMail: false,
           respuestaServerMailExiste: true,
           codigoEnviado: true,
         })
@@ -108,7 +127,7 @@ class Login extends React.Component {
   }
 
   async verificarMailAsync(mail) {
-    let apiUrl = 'https://chmlmobile.chosmalal.net.ar/apiusuarios/v3/cambio_password/verifica_existe_mail.php';
+    let apiUrl = 'https://chmlmobile.chosmalal.net.ar/apiusuarios/v3/verifica_mail_existe.php';
 
     let formData = new FormData();
 
@@ -143,6 +162,7 @@ class Login extends React.Component {
         this.setState({
           cargando: false,
           respuestaServerCodigoExiste: true,
+          seIntentaVerificarCodigo: false,
         })
         alert('El código es correcto. A continuación, ingrese su nueva contraseña.');
       }
@@ -161,7 +181,7 @@ class Login extends React.Component {
   }
 
   async verificarCodigoAsync(mail, codigo) {
-    let apiUrl = 'https://chmlmobile.chosmalal.net.ar/apiusuarios/v3/cambio_password/chequeo_codigo_cambio_pass.php';
+    let apiUrl = 'https://chmlmobile.chosmalal.net.ar/apiusuarios/v3/chequeo_codigo_cambio_pass.php';
 
     let formData = new FormData();
 
@@ -197,6 +217,7 @@ class Login extends React.Component {
         this.setState({
           cargando: false,
           respuestaServerCambiarPassword: true,
+          seIntentaCambiarPassword: false,
         })
         alert('El cambio de clave ha sido exitoso. A continuación, inicie sesión.');
       }
@@ -215,7 +236,17 @@ class Login extends React.Component {
   }
 
   async cambiarPasswordAsync(mail, codigo, nuevaClave) {
-    let apiUrl = 'https://chmlmobile.chosmalal.net.ar/apiusuarios/v3/cambio_password/cambia_pass.php';
+    if (this.state.passwordNuevo1 != this.state.passwordNuevo2){
+      alert('Las claves ingresadas no son iguales.')
+      return false
+    }
+
+    if (this.state.passwordNuevo1.length > 3){
+      alert('La clave es muy corta. Ingrese al menos 4 caracteres.')
+      return false
+    }
+
+    let apiUrl = 'https://chmlmobile.chosmalal.net.ar/apiusuarios/v3/cambia_pass.php';
 
     let formData = new FormData();
 
@@ -235,90 +266,9 @@ class Login extends React.Component {
     return fetch(apiUrl, options);
   }
 
-  render() {
-    if (this.state.cargando){
-      return (
-        <View style={{margin: 20, flexDirection: 'column', alignItems: 'center'}}>
-          <Image style={{
-            margin: 20, width: 60, height: 60}}
-            source={require('../assets/novedades.png')}
-          />
-          <Text style={{
-            margin:10, padding: 10, backgroundColor: 'coral', borderColor: 'blue', borderWidth: 1,
-            borderRadius: 4, fontWeight: 'bold', fontSize: 10
-            }}>
-            Consultando al Servidor...
-          </Text>
-          <ActivityIndicator size= "large" color='#0000ff'/>
-        </View>
-
-      );
-    }
-
-    let botonAdministrador
-    if (this.props.usuarioRegistrado && this.props.usuario.perfilUsuario == 2){
-      botonAdministrador = (
-        <TouchableHighlight style={[styles.button, styles.facebook]} onPress={() => this.props.navigation.navigate('Administracion')}>
-        <View style={styles.buttoncontent}>
-          <Image style={styles.buttonImage}
-            source={require('../assets/usuario_admin.png')}
-          />
-          <Text style={styles.buttonText}> 
-            Menú de Administración
-          </Text>
-        </View>
-        </TouchableHighlight>
-      )
-    }
-
-    let pantalla
-
-    if (this.props.usuarioRegistrado){
-      
-      let leyendaAdmin
-      if (this.props.usuario.perfilUsuario == 2){
-        leyendaAdmin = 'USTED ES UN USUARIO ADMINISTRADOR'
-      }
-      
-      pantalla = 
-        //Vista completa de la pantalla de Logout para el usuario ya registrado.
-        <View style={styles.container}>
-        
-          <Text style={styles.portadaText}>USTED ES UN USUARIO REGISTRADO:</Text>
-          <Text style={styles.portadaData}>{this.props.usuario.nombres + ' ' + this.props.usuario.apellidos}</Text>
-          <Text style={styles.portadaData}>{'Mail: ' + this.props.usuario.mail}</Text>
-          <Text style={styles.portadaText}>{leyendaAdmin}</Text>
-          
-          {botonAdministrador}
-
-          <View>
-          <TouchableHighlight style={[styles.button, styles.facebook]} onPress={()=> this.props.navigation.navigate('Home')}>
-            <View style={styles.buttoncontent}>
-              <Image style={styles.buttonImage}
-                source={require('../assets/home.png')}
-              />
-              <Text style={styles.buttonText}> 
-                Volver al Inicio
-              </Text>
-            </View>
-          </TouchableHighlight>
-          
-          <TouchableHighlight style={[styles.button, styles.facebook]} onPress={(this.logout.bind(this))}>
-            <View style={styles.buttoncontent}>
-              <Image style={styles.buttonImage}
-                source={require('../assets/logout.png')}
-              />
-              <Text style={styles.buttonText}> 
-                Cerrar Sesión
-              </Text>
-            </View>
-          </TouchableHighlight>
-          </View>
-        
-        </View>
-    } else{
-      pantalla =
-        //Vista completa de la pantalla de Login para el usuario no registrado.
+  pantallaLoginComun(){
+    return (
+      //Vista completa de la pantalla de Login para el usuario no registrado.
         //También contiene enlace hacia pantalla de registro.
         <View style={styles.container}>
           
@@ -386,7 +336,7 @@ class Login extends React.Component {
             </View>
             </TouchableHighlight>
 
-            <TouchableHighlight style={[styles.button, styles.facebook]} onPress={(this.verificarMailExisteEnServer.bind(this))}>
+            <TouchableHighlight style={[styles.button, styles.facebook]} onPress={() => this.verificarMail(this.state.mail)}>
             <View style={styles.buttoncontent}>
               <Image style={styles.buttonImage}
                 source={require('../assets/olvido_pass.png')}
@@ -398,6 +348,221 @@ class Login extends React.Component {
             </TouchableHighlight>
 
           </View>
+    )
+  }
+
+  pantallaIngresoNuevaClave(){
+    return (
+        <View style={styles.container}>
+          
+          <Text style={styles.portadaText}>Ingrese su nueva contraseña 2 veces:</Text>
+
+          <KeyboardAvoidingView keyboardVerticalOffset = {120} behavior="padding">
+
+            <View style={styles.inputContainer}>
+              <Ionicons name={'lock-closed-outline'} size={28} color={'rgba(255, 255, 255, 0.7)'}
+                style={styles.inputIcon} />
+
+              <TextInput
+                onChangeText={(passwordNuevo1) => this.setState({passwordNuevo1})}
+                style = {styles.input}
+                placeholder = {'Password'}
+                ref='passwordNuevo1'
+                returnKeyType='next'
+                secureTextEntry = {this.state.showPass} 
+                placeholderTextColor = {'rgba(255, 255, 255, 0.7)'}
+                underlineColorAndroid = 'transparent'
+                value={this.state.passwordNuevo1}
+              />
+            
+              <TouchableOpacity style={styles.btnEye} onPress={this.showPass.bind(this)}>
+                <Ionicons name={this.state.press == false ? 'ios-eye' : 'ios-eye-off'} 
+                  size={28} color={'rgba(255, 255, 255, 0.7)'}/>
+              </TouchableOpacity>        
+            </View>
+
+            <View style={styles.inputContainer}>
+              <Ionicons name={'lock-closed-outline'} size={28} color={'rgba(255, 255, 255, 0.7)'}
+                style={styles.inputIcon} />
+
+              <TextInput
+                onChangeText={(passwordNuevo2) => this.setState({passwordNuevo2})}
+                style = {styles.input}
+                placeholder = {'Password Nuevamente'}
+                ref='passwordNuevo2'
+                returnKeyType='next'
+                secureTextEntry = {this.state.showPass} 
+                placeholderTextColor = {'rgba(255, 255, 255, 0.7)'}
+                underlineColorAndroid = 'transparent'
+                value={this.state.passwordNuevo2}
+              />
+            
+              <TouchableOpacity style={styles.btnEye} onPress={this.showPass.bind(this)}>
+                <Ionicons name={this.state.press == false ? 'ios-eye' : 'ios-eye-off'} 
+                  size={28} color={'rgba(255, 255, 255, 0.7)'}/>
+              </TouchableOpacity>        
+            </View>
+
+            </KeyboardAvoidingView>
+            
+            <TouchableHighlight style={[styles.button, styles.facebook]} onPress={() => {this.cambiarPassword(this.state.mail, this.state.codigo, this.state.passwordNuevo1)}}>
+            <View style={styles.buttoncontent}>
+              <Image style={styles.buttonImage}
+                source={require('../assets/cambio_password.png')}
+              />
+              <Text style={styles.buttonText}> 
+                Cambiar Password
+              </Text>
+            </View>
+            </TouchableHighlight>
+
+          </View>
+    )
+  }
+
+  pantallaIngresoCodigo(){
+    return (        
+        <View style={styles.container}>
+          
+          <Text style={styles.portadaText}>Ingrese el código enviado a su correo para cambiar la clave:</Text>
+          
+          <KeyboardAvoidingView keyboardVerticalOffset = {120} behavior="padding">
+
+            <View style={styles.inputContainer}>
+              <Ionicons name={'ios-mail'} size={28} color={'rgba(255, 255, 255, 0.7)'}
+                style={styles.inputIcon} />
+
+              <TextInput
+                onChangeText={(codigo) => this.setState({codigo})}
+                style = {styles.input}
+                placeholder = {'Mail'} 
+                ref='mail'
+                returnKeyType='next'
+                placeholderTextColor = {'rgba(255, 255, 255, 0.7)'}
+                underlineColorAndroid = 'transparent'
+                value={this.state.codigo}
+              />
+            </View>
+
+            </KeyboardAvoidingView>
+
+            <TouchableHighlight style={[styles.button, styles.facebook]} onPress={() => this.verificarCodigo(this.state.mail, this.state.codigo)}>
+            <View style={styles.buttoncontent}>
+              <Image style={styles.buttonImage}
+                source={require('../assets/cambio_password.png')}
+              />
+              <Text style={styles.buttonText}> 
+                Verificar Código
+              </Text>
+            </View>
+            </TouchableHighlight>
+
+          </View>
+    )
+  }
+
+  render() {
+    let mensaje = ''
+    if (this.state.cargando){
+      if (this.state.seIntentaVerificarMail){
+        mensaje = 'Verificando correo electrónico: ' + this.state.mail + ' - Enviando código...'
+      }else if (this.state.seIntentaVerificarCodigo){
+        mensaje = 'Verificando si el código ingresado corresponde a : ' + this.state.mail
+      }else if (this.state.seIntentaCambiarPassword){
+        mensaje = 'Cambiando la contraseña para el usuario: ' + this.state.mail
+      }
+
+      return (
+        <View style={{margin: 20, flexDirection: 'column', alignItems: 'center'}}>
+          <Image style={{
+            margin: 20, width: 60, height: 60}}
+            source={require('../assets/logueado.png')}
+          />
+          <Text style={{
+            margin:10, padding: 10, backgroundColor: 'coral', borderColor: 'blue', borderWidth: 1,
+            borderRadius: 4, fontWeight: 'bold', fontSize: 10
+            }}>
+            {mensaje}
+          </Text>
+          <ActivityIndicator size= "large" color='#0000ff'/>
+        </View>
+
+      );
+    }
+
+    //Si llego aquí, no hay nada en proceso de carga o consulta de datos.
+    //Verificar primero si es un usuario registrado.
+    let botonAdministrador
+    if (this.props.usuarioRegistrado && this.props.usuario.perfilUsuario == 2){
+      botonAdministrador = (
+        <TouchableHighlight style={[styles.button, styles.facebook]} onPress={() => this.props.navigation.navigate('Administracion')}>
+        <View style={styles.buttoncontent}>
+          <Image style={styles.buttonImage}
+            source={require('../assets/usuario_admin.png')}
+          />
+          <Text style={styles.buttonText}> 
+            Menú de Administración
+          </Text>
+        </View>
+        </TouchableHighlight>
+      )
+    }
+
+    let pantalla
+
+    if (this.props.usuarioRegistrado){
+      
+      let leyendaAdmin
+      if (this.props.usuario.perfilUsuario == 2){
+        leyendaAdmin = 'USTED ES UN USUARIO ADMINISTRADOR'
+      }
+      
+      pantalla = 
+        //Vista completa de la pantalla de Logout para el usuario ya registrado.
+        <View style={styles.container}>
+        
+          <Text style={styles.portadaText}>USTED ES UN USUARIO REGISTRADO:</Text>
+          <Text style={styles.portadaData}>{this.props.usuario.nombres + ' ' + this.props.usuario.apellidos}</Text>
+          <Text style={styles.portadaData}>{'Mail: ' + this.props.usuario.mail}</Text>
+          <Text style={styles.portadaText}>{leyendaAdmin}</Text>
+          
+          {botonAdministrador}
+
+          <View>
+          <TouchableHighlight style={[styles.button, styles.facebook]} onPress={()=> this.props.navigation.navigate('Home')}>
+            <View style={styles.buttoncontent}>
+              <Image style={styles.buttonImage}
+                source={require('../assets/home.png')}
+              />
+              <Text style={styles.buttonText}> 
+                Volver al Inicio
+              </Text>
+            </View>
+          </TouchableHighlight>
+          
+          <TouchableHighlight style={[styles.button, styles.facebook]} onPress={(this.logout.bind(this))}>
+            <View style={styles.buttoncontent}>
+              <Image style={styles.buttonImage}
+                source={require('../assets/logout.png')}
+              />
+              <Text style={styles.buttonText}> 
+                Cerrar Sesión
+              </Text>
+            </View>
+          </TouchableHighlight>
+          </View>
+        
+        </View>
+    } else if (respuestaServerCambiarPassword){
+      pantalla = this.pantallaLoginComun()
+    } else if (respuestaServerCodigoExiste){
+      //Pantalla de ingresar nueva clave.
+      pantalla = this.pantallaIngresoNuevaClave()
+    } else if (respuestaServerMailExiste){
+      //Pantalla de ingresar codigo.
+      pantalla = this.pantallaIngresoCodigo()
+    }else{
+      pantalla = this.pantallaLoginComun()
     }
 
     return (

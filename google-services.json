@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "778065162531",
+    "project_id": "chml-mobile",
+    "storage_bucket": "chml-mobile.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:778065162531:android:69b85765b58853f24e5c96",
+        "android_client_info": {
+          "package_name": "com.munichos.chmlmobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "778065162531-fqargmm6antelpdu5pcan9n0nkdo40if.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCR_4nsRAKiLMiTQmaCrIz4acqlFa7TYbk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "778065162531-fqargmm6antelpdu5pcan9n0nkdo40if.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

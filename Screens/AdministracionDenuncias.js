@@ -84,7 +84,7 @@ class AdministracionDenuncias extends React.Component {
   _handleUpload = async (denuncia, stateChange) => {
     //stateChange: 1 ES ELIMINAR, 2 ES ACTIVAR/DESACTIVAR, 3 es PUBLICA/PRIVADA.
     if (stateChange == 1){
-      Alert.alert(
+      alert(
         "Eliminar Denuncia",
         "Está seguro de que desea eliminar la denuncia?",
         [
@@ -107,25 +107,27 @@ class AdministracionDenuncias extends React.Component {
       });
 
       uploadResponse = await this.uploadChangesAsync(denuncia, stateChange);
-      uploadResult = await uploadResponse.json();
+      uploadResult = uploadResponse.json();
       
-      //console.log(uploadResult);
+      console.log(uploadResult);
       if (uploadResult && uploadResult == 5){
         if (stateChange == 1){ //Si era una eliminación, quito el objeto del listado.
           this.setState({
-            data: data.filter(item => item.id_denuncia != denuncia.id_denuncia)
+            data: this.state.data.filter(item => item.id_denuncia != denuncia.id_denuncia)
           });
         }else{ //Si era un cambio de estado, actualizo el objeto en el listado.
             this.setState({
-              data: data.map(item => cambioActivaCambioPublicaDenuncia(item, stateChange, denuncia.id_denuncia))
+              data: this.state.data.map(item => this.cambioActivaCambioPublicaDenuncia(item, stateChange, denuncia.id_denuncia))
             });
         }
         alert('La operación se ha realizado exitosamente.');
       }
     } catch (e) {
-      //console.log(uploadResponse);
-      //console.log({ uploadResult });
-      //console.log(e);
+      console.log('uploadResponse');
+      console.log(uploadResponse);
+      console.log('uploadResult');
+      console.log(uploadResult);
+      console.log(e);
       alert('Error. Asegúrese de estar conectado a internet.');
     } finally {
       this.setState({
@@ -135,6 +137,11 @@ class AdministracionDenuncias extends React.Component {
   };
 
   async uploadChangesAsync(denuncia, stateChange) {
+    //console.log('uploadChangesAsync')
+    console.log('denuncia')
+    console.log(denuncia)
+    console.log('stateChange')
+    console.log(stateChange)
     let apiUrl = 'https://chmlmobile.chosmalal.net.ar/denuncias/modificar_eliminar_denuncia.php';
     
     let formData = new FormData();
@@ -154,8 +161,6 @@ class AdministracionDenuncias extends React.Component {
       },
     };
 
-    //console.log('A PUNTO DE LLAMAR A LA API CON LAS SIG. OPCIONES:')
-    //console.log(options)
     return fetch(apiUrl, options);
   }
 
@@ -225,7 +230,7 @@ class AdministracionDenuncias extends React.Component {
           <View style={styles.checkBoxAround}>
             <Text style={styles.buttonTextPequeño2}>Públicas</Text>
             <Checkbox
-              style={{alignSelf: 'center', marginTop: 5}}
+              style={{alignSelf: 'center'}}
               value={this.state.filtroPublicas}
               onValueChange={(valor) => this.setState({filtroPublicas: valor})}
             />
@@ -235,7 +240,7 @@ class AdministracionDenuncias extends React.Component {
           <View style={styles.checkBoxAround}>
             <Text style={styles.buttonTextPequeño2}>Privadas</Text>
             <Checkbox
-              style={{alignSelf: 'center', marginTop: 5}}
+              style={{alignSelf: 'center'}}
               value={this.state.filtroPrivadas}
               onValueChange={(valor) => this.setState({filtroPrivadas: valor})}
             />
@@ -244,7 +249,7 @@ class AdministracionDenuncias extends React.Component {
           <View style={styles.checkBoxAround}>
             <Text style={styles.buttonTextPequeño2}>Activas</Text>
             <Checkbox
-              style={{alignSelf: 'center', marginTop: 5}}
+              style={{alignSelf: 'center'}}
               value={this.state.filtroActivas}
               onValueChange={(valor) => this.setState({filtroActivas: valor})}
             />
@@ -253,7 +258,7 @@ class AdministracionDenuncias extends React.Component {
           <View style={styles.checkBoxAround}>
             <Text style={styles.buttonTextPequeño2}>Inactivas</Text>
             <Checkbox
-              style={{alignSelf: 'center', marginTop: 5}}
+              style={{alignSelf: 'center'}}
               value={this.state.filtroInactivas}
               onValueChange={(valor) => this.setState({filtroInactivas: valor})}
             />
@@ -261,7 +266,7 @@ class AdministracionDenuncias extends React.Component {
         
         </View>
 
-        <View style={{marginBottom: 300}}>
+        <View>
         <FlatList
             data={dataFiltrada}
 
@@ -273,7 +278,7 @@ class AdministracionDenuncias extends React.Component {
               }}>
                 
                 <View style={{
-                    flex: 1,
+                    //flex: 1,
                     flexDirection: 'column',
                     justifyContent: 'center',
                     borderWidth: 1,
@@ -354,6 +359,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'lightskyblue',
     alignItems: 'center',
     justifyContent: 'center',
+    //marginTop: 10,
   },
   button: {
     backgroundColor: 'red',
@@ -437,10 +443,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     width: WIDTH * 0.90, 
-    height: 130,
+    height: 150,
     justifyContent: "space-between",
-    marginBottom: -10,
-    marginTop: -20,
+    marginBottom: -20,
+    marginTop: 80,
     //borderRadius: 10,
   },
   buttonHorizontal: {
@@ -449,13 +455,13 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 5,
     borderWidth: 1,
-    marginTop: 10,
+    //marginTop: 10,
   },
   botonesCostadoJuntos:{
     flexDirection: 'row',
   },
   botonesCostado: {
-    width: WIDTH*0.30,
+    width: WIDTH*0.27,
     height: 60,
     borderRadius: 5,
     borderWidth: 1,

@@ -79,11 +79,11 @@ class AdministracionDeliverys extends React.Component {
       if (uploadResult && uploadResult == 5){
         if (stateChange == 1){ //Si era una eliminación, quito el objeto del listado.
           this.setState({
-            data: data.filter(item => item.idcomercio != deliveryId)
+            data: this.state.data.filter(item => item.idcomercio != deliveryId)
           });
         }else{ //Si era un cambio de estado, actualizo el objeto en el listado.
             this.setState({
-              data: data.map(item => activarDesactivarComercio(item, stateChange, deliveryId))
+              data: this.state.data.map(item => activarDesactivarComercio(item, stateChange, deliveryId))
             });
         }
         alert('La operación se ha realizado exitosamente.');

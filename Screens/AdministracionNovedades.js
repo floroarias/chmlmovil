@@ -64,9 +64,9 @@ class AdministracionNovedades extends React.Component {
       uploadResult = uploadResponse.json();
       
       //console.log(uploadResult);
-      if (uploadResult && uploadResult == 1){
+      if (uploadResult && uploadResult == 5){
         this.setState({
-          data: data.filter(item => item.idNovedad != novedad.idNovedad)
+          data: this.state.data.filter(item => item.idNovedad != novedad.idNovedad)
         });
         alert('La operación se ha realizado exitosamente.');
       }

@@ -59,7 +59,7 @@ class AdministracionUsuarios extends React.Component {
       //console.log(uploadResult);
       if (uploadResult && uploadResult == 5){
         this.setState({
-          data: data.filter(item => item.idUsuario != usuario.idUsuario),
+          data: this.state.data.filter(item => item.idUsuario != usuario.idUsuario),
         })
         alert('El usuario se eliminó correctamente.');
       }

@@ -32,13 +32,22 @@ class DetalleUsuarioAdmin extends React.Component {
   };
 
   componentDidMount(){
+    //console.log(this.props.route.params.accion)
     this.setState({
-      accion: this.props.navigation.state.params.accion
+      accion: this.props.route.params.accion
     })
 
-    if (this.props.navigation.state.params.accion == 'editar'){
+    if (this.props.route.params.accion == 'editar'){
+      if (this.props.route.params.usuario.perfil_usuario == 2){
+        this.setState({
+          usuarioAdmin: true
+        })
+      }
       this.setState({
-        usuarioPasado: this.props.navigation.state.params.usuario
+        usuarioPasado: this.props.route.params.usuario,
+        nombres: this.props.route.params.usuario.nombre,
+        apellidos: this.props.route.params.usuario.apellido,
+        mail: this.props.route.params.usuario.mail
       })
     }
   }
