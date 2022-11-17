@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableHighlight, 
-Image, ScrollView, Dimensions, FlatList } from 'react-native';
+Image, Alert, ScrollView, Dimensions, FlatList } from 'react-native';
 import { connect } from 'react-redux';
 const {width: WIDTH} = Dimensions.get('window');
 import Checkbox from 'expo-checkbox';
@@ -15,7 +15,7 @@ class AdministracionDeliverys extends React.Component {
   }
 
   async componentDidMount() {
-    return await fetch('https://delivery.chosmalal.net.ar/deliverylistado.php')
+    return await fetch('https://delivery.chosmalal.net.ar/deliverylistadoadmin.php')
       .then(response => response.json())
       .then(responseJson => {
         this.setState({
@@ -122,7 +122,7 @@ class AdministracionDeliverys extends React.Component {
 
     //console.log('A PUNTO DE LLAMAR A LA API CON LAS SIG. OPCIONES:')
     //console.log(options)
-    return fetch(apiUrl, options);
+    return await fetch(apiUrl, options);
   }
 
   static navigationOptions = ({navigation}) => {

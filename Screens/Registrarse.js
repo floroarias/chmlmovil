@@ -41,6 +41,7 @@ export default class Registrarse extends React.Component {
 
       uploadResponse = await this.uploadUserAsync();
       uploadResult = uploadResponse.json();
+
       if (uploadResult && uploadResult === 5){
         this.setState({
           resultadoSubida: true,
@@ -75,7 +76,7 @@ export default class Registrarse extends React.Component {
       },
     };
 
-    return fetch(apiUrl, options);
+    return await fetch(apiUrl, options);
   }
 
   validarDatos = () => {

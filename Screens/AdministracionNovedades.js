@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableHighlight, 
-Image, Dimensions, FlatList } from 'react-native';
+Image, Dimensions, Alert, FlatList } from 'react-native';
 import { connect } from 'react-redux';
 const {width: WIDTH} = Dimensions.get('window');
 import { ActivityIndicator } from 'react-native';
@@ -104,7 +104,7 @@ class AdministracionNovedades extends React.Component {
 
     //console.log('A PUNTO DE LLAMAR A LA API CON LAS SIG. OPCIONES:')
     //console.log(options)
-    return fetch(apiUrl, options);
+    return await fetch(apiUrl, options);
   }
 
   static navigationOptions = ({navigation}) => {

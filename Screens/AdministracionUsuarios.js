@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableHighlight, Image, FlatList, Dimensions } from 'react-native';
+import { StyleSheet, Text, Alert, View, TouchableHighlight, Image, FlatList, Dimensions } from 'react-native';
 import { ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import Checkbox from 'expo-checkbox';
@@ -26,6 +26,11 @@ class AdministracionUsuarios extends React.Component {
   }
 
   eliminarUsuario = async (usuario) => {
+    if (usuario.id_usuario == this.props.usuario.idUsuario){
+      alert('No puede eliminarse a sí mismo!!')
+      return false
+    }
+
     let resultado = false
 
     Alert.alert(
@@ -46,6 +51,7 @@ class AdministracionUsuarios extends React.Component {
   }
 
   eliminarUsuarioAsync = async (usuario) => {
+    
     let uploadResponse, uploadResult;
 
     try {
@@ -56,10 +62,12 @@ class AdministracionUsuarios extends React.Component {
       uploadResponse = await this.uploadChangesAsyncUsuario(usuario);
       uploadResult = uploadResponse.json();
 
+      console.log(uploadResponse)
+
       //console.log(uploadResult);
       if (uploadResult && uploadResult == 5){
         this.setState({
-          data: this.state.data.filter(item => item.idUsuario != usuario.idUsuario),
+          data: this.state.data.filter(item => item.id_usuario != usuario.id_usuario),
         })
         alert('El usuario se eliminó correctamente.');
       }
@@ -83,7 +91,7 @@ class AdministracionUsuarios extends React.Component {
     let formData = new FormData();
 
     formData.append('mail', usuario.mail)
-    formData.append('id_usuario', usuario.idUsuario)
+    formData.append('id_usuario', usuario.id_usuario)
     formData.append('id_usuario_admin', this.props.usuario.idUsuario)
     formData.append('jwt_usuario_admin', this.props.usuario.jwt)
     formData.append('operacion', 2) //Tipo Operación: 1 es modificar, 2 es eliminar.
@@ -97,7 +105,7 @@ class AdministracionUsuarios extends React.Component {
       },
     };
 
-    return fetch(apiUrl, options);
+    return await fetch(apiUrl, options);
   }
 
   static navigationOptions = {
@@ -146,12 +154,15 @@ class AdministracionUsuarios extends React.Component {
 
     //Filtro la información de acuerdo a los checkboxes.
     let dataFiltrada = this.state.data
+    //dataFiltrada = dataFiltrada.filter(item => item.idUsuario != this.props.usuario.idUsuario) //Sólo muestro usuarios distintos al actual.
+    
     if (!this.state.filtroAdmins){
       dataFiltrada = dataFiltrada.filter(item => item.perfil_usuario != 2)
     }
     if (!this.state.filtroComunes){
       dataFiltrada = dataFiltrada.filter(item => item.perfil_usuario != 1)
     }
+    
     /* Este método sólo se ejecuta si isLoading es falso.
     Esto significa que se terminó de cargar la información. */
     return (

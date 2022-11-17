@@ -127,11 +127,14 @@ class Login extends React.Component {
   }
 
   async verificarMailAsync(mail) {
+    //La API verifica si el mail ingresado pertenece a un usuario registrado de la app.
+	  //Si es verdadero devuelve 5 y manda un código de confirmación al mail indicado.
+	  //Si el correo no está registrado, devuelve 0.
     let apiUrl = 'https://chmlmobile.chosmalal.net.ar/apiusuarios/v3/verifica_mail_existe.php';
 
     let formData = new FormData();
 
-    formData.append('mail', mail)
+    formData.append('mail', mail);
   
     let options = {
       method: 'POST',
@@ -181,6 +184,7 @@ class Login extends React.Component {
   }
 
   async verificarCodigoAsync(mail, codigo) {
+    //Verifica si el código es válido para el correo indicado.
     let apiUrl = 'https://chmlmobile.chosmalal.net.ar/apiusuarios/v3/chequeo_codigo_cambio_pass.php';
 
     let formData = new FormData();
@@ -238,12 +242,12 @@ class Login extends React.Component {
   async cambiarPasswordAsync(mail, codigo, nuevaClave) {
     if (this.state.passwordNuevo1 != this.state.passwordNuevo2){
       alert('Las claves ingresadas no son iguales.')
-      return false
+      return 0
     }
 
     if (this.state.passwordNuevo1.length > 3){
       alert('La clave es muy corta. Ingrese al menos 4 caracteres.')
-      return false
+      return 0
     }
 
     let apiUrl = 'https://chmlmobile.chosmalal.net.ar/apiusuarios/v3/cambia_pass.php';

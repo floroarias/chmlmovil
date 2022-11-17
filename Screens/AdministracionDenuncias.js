@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TouchableHighlight, 
-Image, Dimensions, ActivityIndicator, FlatList } from 'react-native';
+Image, Alert, Dimensions, ActivityIndicator, FlatList } from 'react-native';
 import { connect } from 'react-redux';
 const {width: WIDTH} = Dimensions.get('window');
 import Checkbox from 'expo-checkbox';
@@ -71,7 +71,6 @@ class AdministracionDenuncias extends React.Component {
       denuncia.activa = denuncia.activa == 1 ? 0 : 1 // ACTIVO/DESACTIVO.
       return denuncia
     }
-
     if (stateChange == 3){
       denuncia.tipo_denuncia = denuncia.tipo_denuncia == 1 ? 2 : 1 // PÚBLICA/PRIVADA. 1 es privada, 2 es pública.
       return denuncia
@@ -161,7 +160,7 @@ class AdministracionDenuncias extends React.Component {
       },
     };
 
-    return fetch(apiUrl, options);
+    return await fetch(apiUrl, options);
   }
 
   render () {

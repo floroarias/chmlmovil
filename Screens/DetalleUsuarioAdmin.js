@@ -2,12 +2,13 @@
 //Solo usuarios de tipo Admin.
 import React from 'react';
 import { StyleSheet, Text, View, TouchableHighlight, TextInput, TouchableOpacity,
-  Image, Dimensions, ScrollView, KeyboardAvoidingView } from 'react-native';
+  Image, Dimensions, Alert, KeyboardAvoidingView } from 'react-native';
 import { ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 const {width: WIDTH} = Dimensions.get('window');
 import Checkbox from 'expo-checkbox';
+import CountDown from 'react-native-countdown-component';
 
 class DetalleUsuarioAdmin extends React.Component {
   state = {
@@ -54,9 +55,9 @@ class DetalleUsuarioAdmin extends React.Component {
 
   guardar_o_modificar = async () => {
     if (this.state.accion == 'editar'){
-      this._handleUploadUser()
+      await this._handleUploadUser()
     }else{
-      this.UploadNewUser()
+      await this.UploadNewUser()
     }
   }
 
@@ -68,16 +69,19 @@ class DetalleUsuarioAdmin extends React.Component {
       return false
     }
 
-    let uploadResponse, uploadResult;
+    let uploadResponse, uploadResult
 
     try {
       this.setState({
-        uploading: true,
-        //subidaIntentada: true
+        uploading: true
       });
 
-      uploadResponse = await this.uploadUserAsync();
-      uploadResult = uploadResponse.json();
+      uploadResponse = await this.uploadUserAsync()
+      uploadResult = await uploadResponse.json()
+      
+      console.log(uploadResponse)
+      console.log(uploadResult)
+
       if (uploadResult && uploadResult == 5){
         this.setState({
           resultadoSubida: true,
@@ -96,19 +100,25 @@ class DetalleUsuarioAdmin extends React.Component {
   };
 
   async uploadUserAsync() {
+    //console.log('ANTES DE API URL')
     let apiUrl = 'https://chmlmobile.chosmalal.net.ar/apiusuarios/v2/modificar_eliminar_usuario.php';
+    //console.log(apiUrl)
 
     let formData = new FormData();
+    let operacion = 1
+    operacion = operacion.toString()
+    let esUsuarioAdmin = this.state.usuarioAdmin ? 2 : 1
+    esUsuarioAdmin = esUsuarioAdmin.toString()
 
     formData.append('mail', this.state.mail)
     formData.append('password', this.state.contrasena1)
     formData.append('apellidos', this.state.apellidos)
     formData.append('nombres', this.state.nombres)
-    formData.append('tipo_usuario', this.state.usuarioAdmin ? 2 : 1)
-    formData.append('id_usuario', this.state.usuarioPasado.idUsuario)
+    formData.append('tipo_usuario', esUsuarioAdmin)
+    formData.append('id_usuario', this.state.usuarioPasado.id_usuario)
     formData.append('id_usuario_admin', this.props.usuario.idUsuario)
     formData.append('jwt_usuario_admin', this.props.usuario.jwt)
-    formData.append('operacion', 1) //Tipo Operación: 1 es modificar, 2 es eliminar.
+    formData.append('operacion', operacion) //Tipo Operación: 1 es modificar, 2 es eliminar.
   
     let options = {
       method: 'POST',
@@ -119,7 +129,10 @@ class DetalleUsuarioAdmin extends React.Component {
       },
     };
 
-    return fetch(apiUrl, options);
+    //console.log(apiUrl)
+    //console.log(options)
+    
+    return await fetch(apiUrl, options)
   }
 
   //Usar la siguiente función en el manejo del botón Guardar Usuario.
@@ -129,6 +142,8 @@ class DetalleUsuarioAdmin extends React.Component {
       alert('Error. Revise que todos los campos estén completos y sean correctos e intente nuevamente.')
       return false
     }
+    
+    console.log('HOLA')
 
     let uploadResponse, uploadResult;
 
@@ -139,7 +154,11 @@ class DetalleUsuarioAdmin extends React.Component {
       });
 
       uploadResponse = await this.uploadNewUserAsync();
-      uploadResult = uploadResponse.json();
+      uploadResult = await uploadResponse.json();
+
+      console.log(uploadResponse)
+      console.log(uploadResult)
+
       if (uploadResult && uploadResult == 5){
         this.setState({
           resultadoSubida: true,
@@ -179,7 +198,7 @@ class DetalleUsuarioAdmin extends React.Component {
       },
     };
 
-    return fetch(apiUrl, options);
+    return await fetch(apiUrl, options);
   }
 
   validarDatos = () => {
@@ -190,6 +209,11 @@ class DetalleUsuarioAdmin extends React.Component {
     let apellidoCorrecto = expresionRegularNombreApellido.exec(this.state.apellidos)
     let mailCorrecto = expresionRegularMail.exec(this.state.mail)
     let passwordCorrecto = ( this.state.contrasena1.length > 3 && (this.state.contrasena1 == this.state.contrasena2) )
+
+    //El usuario actual no puede desactivar su rol de admin.
+    if (this.props.usuario.idUsuario == this.props.usuarioPasado.idUsuario && !this.state.usuarioAdmin){
+      return false
+    }
     
     return (nombreCorrecto && apellidoCorrecto && mailCorrecto && passwordCorrecto)
   }
@@ -238,7 +262,7 @@ class DetalleUsuarioAdmin extends React.Component {
           
           <CountDown
             size={30}
-            until={5}
+            until={10}
             onFinish={() => this.props.navigation.navigate('AdministracionUsuarios')}
             onPress={() => this.props.navigation.navigate('AdministracionUsuarios')}
             digitStyle={{backgroundColor: '#FFF', borderWidth: 2, borderColor: '#1CC625'}}
