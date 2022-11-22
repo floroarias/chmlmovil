@@ -72,25 +72,6 @@ class Login extends React.Component {
       return false
     }
 
-    let continuar = true
-    Alert.alert(
-      "Cambio de clave",
-      "Se enviará un código de cambio de clave al correo electrónico ingresado. Desea continuar?",
-      [
-        {
-          text: "Cancelar",
-          onPress: () => {continuar = false},
-          style: "cancel"
-        },
-        { text: "Confirmar", onPress: () => {} }
-      ],
-      { cancelable: false }
-    )
-    
-    if (!continuar){
-      return false
-    }
-
     let uploadResponse, uploadResult;
 
     try {
@@ -100,7 +81,7 @@ class Login extends React.Component {
       });
 
       uploadResponse = await this.verificarMailAsync(mail);
-      uploadResult = uploadResponse.json();
+      uploadResult = await uploadResponse.json();
 
       //console.log(uploadResult);
       if (uploadResult && uploadResult == 5){
@@ -145,7 +126,7 @@ class Login extends React.Component {
       },
     };
 
-    return fetch(apiUrl, options);
+    return await fetch(apiUrl, options);
   }
 
   verificarCodigo = async (mail, codigo) => {
@@ -158,7 +139,7 @@ class Login extends React.Component {
       });
 
       uploadResponse = await this.verificarCodigoAsync(mail, codigo);
-      uploadResult = uploadResponse.json();
+      uploadResult = await uploadResponse.json();
 
       //console.log(uploadResult);
       if (uploadResult && uploadResult == 5){
@@ -201,7 +182,7 @@ class Login extends React.Component {
       },
     };
 
-    return fetch(apiUrl, options);
+    return await fetch(apiUrl, options);
   }
 
   cambiarPassword = async (mail, codigo, nuevaClave) => {
@@ -214,7 +195,7 @@ class Login extends React.Component {
       });
 
       uploadResponse = await this.cambiarPasswordAsync(mail, codigo, nuevaClave);
-      uploadResult = uploadResponse.json();
+      uploadResult = await uploadResponse.json();
 
       //console.log(uploadResult);
       if (uploadResult && uploadResult == 5){
@@ -267,7 +248,7 @@ class Login extends React.Component {
       },
     };
 
-    return fetch(apiUrl, options);
+    return await fetch(apiUrl, options);
   }
 
   pantallaLoginComun(){

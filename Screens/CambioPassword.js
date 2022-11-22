@@ -74,7 +74,7 @@ class CambioPassword extends React.Component {
             margin:10, padding: 10, backgroundColor: 'coral', borderColor: 'blue', borderWidth: 1,
             borderRadius: 4, fontWeight: 'bold', fontSize: 10
             }}>
-            GUARDANDO LOS CAMBIOS, ESPERE POR FAVOR ...
+            Guardando los cambios, espere por favor...
           </Text>
           <ActivityIndicator color="#0000ff" size="large" />
         
@@ -86,7 +86,7 @@ class CambioPassword extends React.Component {
       <View style = {styles.container}>
         <ScrollView>
       
-      <Text style={styles.portadaText}>CAMBIO DE PASSWORD - CHML MOBILE</Text>
+      <Text style={styles.portadaText}>Cambio de Password - CHML Mobile</Text>
       
       <Image style={styles.portadaImage}
         source = {require('../assets/logo_chml_web.png')}
@@ -189,8 +189,9 @@ class CambioPassword extends React.Component {
       });
 
       uploadResponse = await this.changePasswordAsync();
-      uploadResult = uploadResponse.json();
-      if (uploadResult && uploadResult === 1){
+      uploadResult = await uploadResponse.json();
+
+      if (uploadResult && uploadResult == 1){
         this.setState({
           resultadoSubida: true,
         })

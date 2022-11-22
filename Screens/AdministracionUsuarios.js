@@ -11,6 +11,7 @@ class AdministracionUsuarios extends React.Component {
     data: [],
     filtroAdmins: true,
     filtroComunes: true,
+    borrar: false,
   } 
 
   async componentDidMount() {
@@ -25,44 +26,50 @@ class AdministracionUsuarios extends React.Component {
       });
   }
 
+  confirmarEliminacion = (usuario) => {
+    let resultado = false
+
+    Alert.alert(
+      "Advertencia",
+      "Está seguro de eliminar el usuario?",
+      [
+        {
+          text: "Cancelar",
+          onPress: () => resultado = false,
+          style: "cancel"
+        },
+        { text: "Confirmar", onPress: () => this.eliminarUsuario(usuario) }
+      ],
+      { cancelable: false }
+    )
+  }
+
   eliminarUsuario = async (usuario) => {
+    //console.log(usuario)
     if (usuario.id_usuario == this.props.usuario.idUsuario){
       alert('No puede eliminarse a sí mismo!!')
       return false
     }
 
-    let resultado = false
-
-    Alert.alert(
-      "Eliminar Usuario",
-      "Está seguro de que desea eliminar el usuario?",
-      [
-        {
-          text: "Cancelar",
-          onPress: () => {resultado = false},
-          style: "cancel"
-        },
-        { text: "Confirmar", onPress: await this.eliminarUsuarioAsync(usuario) }
-      ],
-      { cancelable: false }
-    )
-    //console.log(resultado)
-    return resultado
+    return await this.eliminarUsuarioAsync(usuario)
   }
 
   eliminarUsuarioAsync = async (usuario) => {
     
     let uploadResponse, uploadResult;
-
+    
+    console.log('eliminarUsuarioAsync')
+    console.log(usuario)
+    
     try {
       this.setState({
         uploading: true
       });
 
       uploadResponse = await this.uploadChangesAsyncUsuario(usuario);
-      uploadResult = uploadResponse.json();
+      uploadResult = await uploadResponse.json();
 
-      console.log(uploadResponse)
+      //console.log(uploadResult)
 
       //console.log(uploadResult);
       if (uploadResult && uploadResult == 5){
@@ -86,6 +93,7 @@ class AdministracionUsuarios extends React.Component {
   }
 
   async uploadChangesAsyncUsuario(usuario) {
+    console.log('dentro de upload changes async')
     let apiUrl = 'https://chmlmobile.chosmalal.net.ar/apiusuarios/v2/modificar_eliminar_usuario.php';
 
     let formData = new FormData();
@@ -104,6 +112,8 @@ class AdministracionUsuarios extends React.Component {
         'Content-Type': 'multipart/form-data',
       },
     };
+
+    //console.log(formData)
 
     return await fetch(apiUrl, options);
   }
@@ -228,7 +238,7 @@ class AdministracionUsuarios extends React.Component {
                       </View>
                     </TouchableHighlight>
 
-                    <TouchableHighlight style={[styles.button2, styles.facebook]} onPress={(item) => this.eliminarUsuario(item)}>
+                    <TouchableHighlight style={[styles.button2, styles.facebook]} onPress={() => this.confirmarEliminacion(item)}>
                       <View style={styles.buttoncontent}>
                         <Image style={styles.buttonImage}
                           source={require('../assets/papelera.png')}

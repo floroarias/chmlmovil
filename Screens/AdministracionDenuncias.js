@@ -79,25 +79,26 @@ class AdministracionDenuncias extends React.Component {
     return denuncia
   }
 
+  confirmarEliminacion = (denuncia) => {
+
+    Alert.alert(
+      "Advertencia",
+      "Está seguro de eliminar la denuncia?",
+      [
+        {
+          text: "Cancelar",
+          onPress: () => resultado = false,
+          style: "cancel"
+        },
+        { text: "Confirmar", onPress: () => this._handleUpload(denuncia, 1) }
+      ],
+      { cancelable: false }
+    )
+  }
+
   //Usar la siguiente función en el manejo del cambio de estado pública/privada o activa/inactiva y de la eliminación también.
   _handleUpload = async (denuncia, stateChange) => {
     //stateChange: 1 ES ELIMINAR, 2 ES ACTIVAR/DESACTIVAR, 3 es PUBLICA/PRIVADA.
-    if (stateChange == 1){
-      alert(
-        "Eliminar Denuncia",
-        "Está seguro de que desea eliminar la denuncia?",
-        [
-          {
-            text: "Cancelar",
-            onPress: () => {return false},
-            style: "cancel"
-          },
-          { text: "Confirmar", onPress: () => {} }
-        ],
-        { cancelable: false }
-      )
-    }
-
     let uploadResponse, uploadResult;
 
     try {
@@ -106,7 +107,7 @@ class AdministracionDenuncias extends React.Component {
       });
 
       uploadResponse = await this.uploadChangesAsync(denuncia, stateChange);
-      uploadResult = uploadResponse.json();
+      uploadResult = await uploadResponse.json();
       
       console.log(uploadResult);
       if (uploadResult && uploadResult == 5){
@@ -119,14 +120,10 @@ class AdministracionDenuncias extends React.Component {
               data: this.state.data.map(item => this.cambioActivaCambioPublicaDenuncia(item, stateChange, denuncia.id_denuncia))
             });
         }
+
         alert('La operación se ha realizado exitosamente.');
       }
     } catch (e) {
-      console.log('uploadResponse');
-      console.log(uploadResponse);
-      console.log('uploadResult');
-      console.log(uploadResult);
-      console.log(e);
       alert('Error. Asegúrese de estar conectado a internet.');
     } finally {
       this.setState({
@@ -137,10 +134,6 @@ class AdministracionDenuncias extends React.Component {
 
   async uploadChangesAsync(denuncia, stateChange) {
     //console.log('uploadChangesAsync')
-    console.log('denuncia')
-    console.log(denuncia)
-    console.log('stateChange')
-    console.log(stateChange)
     let apiUrl = 'https://chmlmobile.chosmalal.net.ar/denuncias/modificar_eliminar_denuncia.php';
     
     let formData = new FormData();
@@ -321,7 +314,7 @@ class AdministracionDenuncias extends React.Component {
                   </View>
 
                   <View style={styles.botonesCostado}>
-                  <TouchableHighlight onPress={() => this._handleUpload(item, 1)}>
+                  <TouchableHighlight onPress={() => this.confirmarEliminacion(item)}>
                   <Text style={styles.buttonTextPequeño2}>
                       Eliminar
                   </Text>

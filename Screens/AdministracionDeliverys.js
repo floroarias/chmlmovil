@@ -46,24 +46,29 @@ class AdministracionDeliverys extends React.Component {
     return comercio
   }
 
+  confirmarEliminacion = (deliveryId) => {
+    let resultado = false
+
+    Alert.alert(
+      "Advertencia",
+      "Está seguro de eliminar el comercio?",
+      [
+        {
+          text: "Cancelar",
+          onPress: () => resultado = false,
+          style: "cancel"
+        },
+        { text: "Confirmar", onPress: () => this._handleUpload(deliveryId, 1) }
+      ],
+      { cancelable: false }
+    )
+  }
+
   //Usar la siguiente función en el manejo del activar/desactivar o eliminar delivery.
   _handleUpload = async (deliveryId, stateChange) => {
     //stateChange: 1 ES ELIMINAR, 2 ES ACTIVAR, 3 es DESACTIVAR.
-    if (stateChange == 1){
-      Alert.alert(
-        "Eliminar Delivery",
-        "Está seguro de que desea eliminar el comercio?",
-        [
-          {
-            text: "Cancelar",
-            onPress: () => {return false},
-            style: "cancel"
-          },
-          { text: "Confirmar", onPress: () => {} }
-        ],
-        { cancelable: false }
-      )
-    }
+    console.log(deliveryId)
+    console.log(stateChange)
 
     let uploadResponse, uploadResult;
 
@@ -73,7 +78,9 @@ class AdministracionDeliverys extends React.Component {
       });
 
       uploadResponse = await this.uploadChangesAsync(deliveryId, stateChange);
-      uploadResult = uploadResponse.json();
+      uploadResult = await uploadResponse.json();
+
+      console.log(uploadResult)
       
       //console.log(uploadResult);
       if (uploadResult && uploadResult == 5){
@@ -83,7 +90,7 @@ class AdministracionDeliverys extends React.Component {
           });
         }else{ //Si era un cambio de estado, actualizo el objeto en el listado.
             this.setState({
-              data: this.state.data.map(item => activarDesactivarComercio(item, stateChange, deliveryId))
+              data: this.state.data.map(item => this.activarDesactivarComercio(item, stateChange, deliveryId))
             });
         }
         alert('La operación se ha realizado exitosamente.');
@@ -106,8 +113,8 @@ class AdministracionDeliverys extends React.Component {
     let apiUrl = 'https://delivery.chosmalal.net.ar/modificar_eliminar_delivery.php';
     
     let formData = new FormData();
-    formData.append('deliveryId', deliveryId)
-    formData.append('tipoDeCambio', stateChange)
+    formData.append('delivery_id', deliveryId)
+    formData.append('tipo_de_cambio', stateChange)
     formData.append('id_usuario', this.props.usuario.idUsuario)
     formData.append('jwt', this.props.usuario.jwt)
   
@@ -120,8 +127,8 @@ class AdministracionDeliverys extends React.Component {
       },
     };
 
-    //console.log('A PUNTO DE LLAMAR A LA API CON LAS SIG. OPCIONES:')
-    //console.log(options)
+    console.log('A PUNTO DE LLAMAR A LA API CON LAS SIG. OPCIONES:')
+    console.log(options)
     return await fetch(apiUrl, options);
   }
 
@@ -214,7 +221,7 @@ class AdministracionDeliverys extends React.Component {
 
                   <View style={styles.botonesActivarEliminar}>{/* Botones de activar/desactivar y eliminar */}
                     
-                    <TouchableHighlight style={[styles.button2, styles.facebook]} onPress={item.activo == 1 ? (item) => this._handleUpload(item, 3) : (item) => this._handleUpload(item, 2)}>
+                    <TouchableHighlight style={[styles.button2, styles.facebook]} onPress={item.activo == 1 ? () => this._handleUpload(item.idcomercio, 3) : () => this._handleUpload(item.idcomercio, 2)}>
                       <View style={styles.buttoncontent}>
                         <Image style={styles.buttonImage}
                           resizeMethod={'resize'}
@@ -227,7 +234,7 @@ class AdministracionDeliverys extends React.Component {
                       </View>
                     </TouchableHighlight>
 
-                    <TouchableHighlight style={[styles.button2, styles.facebook]} onPress={(item) => this._handleUpload(item, 1)}>
+                    <TouchableHighlight style={[styles.button2, styles.facebook]} onPress={() => this.confirmarEliminacion(item.idcomercio)}>
                       <View style={styles.buttoncontent}>
                         <Image style={styles.buttonImage}
                           source={require('../assets/papelera.png')}

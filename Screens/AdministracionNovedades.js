@@ -37,22 +37,26 @@ class AdministracionNovedades extends React.Component {
       });
   }
 
+  confirmarEliminacion = (novedad) => {
+    let resultado = false
+
+    Alert.alert(
+      "Advertencia",
+      "Está seguro de eliminar la novedad?",
+      [
+        {
+          text: "Cancelar",
+          onPress: () => resultado = false,
+          style: "cancel"
+        },
+        { text: "Confirmar", onPress: () => this._handleDelete(novedad) }
+      ],
+      { cancelable: false }
+    )
+  }
+
   //Usar la siguiente función en el manejo de eliminar novedad.
   _handleDelete = async (novedad) => {
-      Alert.alert(
-        "Eliminar Novedad",
-        "Está seguro de que desea eliminar la novedad?",
-        [
-          {
-            text: "Cancelar",
-            onPress: () => {return false},
-            style: "cancel"
-          },
-          { text: "Confirmar", onPress: () => {} }
-        ],
-        { cancelable: false }
-      )
-
     let uploadResponse, uploadResult;
 
     try {
@@ -61,14 +65,14 @@ class AdministracionNovedades extends React.Component {
       });
 
       uploadResponse = await this.uploadChangesAsync(novedad);
-      uploadResult = uploadResponse.json();
+      uploadResult = await uploadResponse.json();
       
       //console.log(uploadResult);
       if (uploadResult && uploadResult == 5){
         this.setState({
           data: this.state.data.filter(item => item.idNovedad != novedad.idNovedad)
         });
-        alert('La operación se ha realizado exitosamente.');
+        alert('La novedad se ha eliminado exitosamente.');
       }
       //console.log({ uploadResult });
       //alert(uploadResult.stringify())

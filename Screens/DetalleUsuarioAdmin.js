@@ -142,8 +142,6 @@ class DetalleUsuarioAdmin extends React.Component {
       alert('Error. Revise que todos los campos estén completos y sean correctos e intente nuevamente.')
       return false
     }
-    
-    console.log('HOLA')
 
     let uploadResponse, uploadResult;
 
@@ -156,8 +154,8 @@ class DetalleUsuarioAdmin extends React.Component {
       uploadResponse = await this.uploadNewUserAsync();
       uploadResult = await uploadResponse.json();
 
-      console.log(uploadResponse)
-      console.log(uploadResult)
+      //console.log(uploadResponse)
+      //console.log(uploadResult)
 
       if (uploadResult && uploadResult == 5){
         this.setState({
