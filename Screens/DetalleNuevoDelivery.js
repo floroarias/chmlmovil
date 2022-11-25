@@ -92,7 +92,7 @@ class DetalleNuevoDelivery extends React.Component {
       
       //console.log(uploadResult);
       if (uploadResult){
-        if (uploadResult == 1){//Subida exitosa
+        if (uploadResult == 5){//Subida exitosa
           this.setState({
             resultadoSubida: true, //Subida correcta.
             subidaIntentada: true, //Se realizó intento de subir la información.
@@ -137,6 +137,7 @@ class DetalleNuevoDelivery extends React.Component {
     //let rubrosSeleccionadosJSON = rubrosSeleccionados.json();
   
     let formData = new FormData();
+
     formData.append('imagen', {
       uri,
       name: `deliveryMobile.${fileType}`,
@@ -161,7 +162,7 @@ class DetalleNuevoDelivery extends React.Component {
 
     //console.log('A PUNTO DE LLAMAR A LA API CON LAS SIG. OPCIONES:')
     //console.log(options)
-    return fetch(apiUrl, options);
+    return await fetch(apiUrl, options);
   }
 
   validarDatos = () => {

@@ -154,8 +154,8 @@ class DetalleUsuarioAdmin extends React.Component {
       uploadResponse = await this.uploadNewUserAsync();
       uploadResult = await uploadResponse.json();
 
-      //console.log(uploadResponse)
-      //console.log(uploadResult)
+      console.log(uploadResponse)
+      console.log(uploadResult)
 
       if (uploadResult && uploadResult == 5){
         this.setState({

@@ -92,7 +92,8 @@ class AdministracionNovedades extends React.Component {
     let apiUrl = 'https://chmlmobile.chosmalal.net.ar/novedades/eliminar_novedad.php';
     
     let formData = new FormData();
-    formData.append('novedadId', novedad.idNovedad)
+    
+    formData.append('novedad_id', novedad.idNovedad)
     formData.append('nombre_imagen', novedad.nombreImagen)
     formData.append('id_usuario_admin', this.props.usuario.idUsuario)
     formData.append('jwt_usuario_admin', this.props.usuario.jwt)

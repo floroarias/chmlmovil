@@ -82,6 +82,7 @@ class DetalleNovedadAdmin extends React.Component {
     }
   
     let formData = new FormData();
+    
     formData.append('imagen', {
       uri,
       name: `novedadMobile.${fileType}`,
@@ -103,7 +104,7 @@ class DetalleNovedadAdmin extends React.Component {
 
     //console.log('A PUNTO DE LLAMAR A LA API CON LAS SIG. OPCIONES:')
     //console.log(options)
-    return fetch(apiUrl, options);
+    return await fetch(apiUrl, options);
   }
 
   validarDatos = () => {

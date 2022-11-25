@@ -137,8 +137,8 @@ class AdministracionDenuncias extends React.Component {
     let apiUrl = 'https://chmlmobile.chosmalal.net.ar/denuncias/modificar_eliminar_denuncia.php';
     
     let formData = new FormData();
-    formData.append('denunciaId', denuncia.id_denuncia)
-    formData.append('tipoDeCambio', stateChange)
+    formData.append('denuncia_id', denuncia.id_denuncia)
+    formData.append('tipo_de_cambio', stateChange)
     formData.append('activa', denuncia.activa) //1 activa, 0 inactiva.
     formData.append('tipo_denuncia', denuncia.tipo_denuncia) //1 privada, 2 pública.
     formData.append('id_usuario_admin', this.props.usuario.idUsuario)
