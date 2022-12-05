@@ -109,7 +109,8 @@ class AdministracionDenuncias extends React.Component {
       uploadResponse = await this.uploadChangesAsync(denuncia, stateChange);
       uploadResult = await uploadResponse.json();
       
-      console.log(uploadResult);
+      console.log(uploadResult)
+
       if (uploadResult && uploadResult == 5){
         if (stateChange == 1){ //Si era una eliminación, quito el objeto del listado.
           this.setState({
@@ -308,7 +309,7 @@ class AdministracionDenuncias extends React.Component {
                   <View style={styles.botonesCostado}>
                   <TouchableHighlight onPress={() => this._handleUpload(item, 2)}>
                   <Text style={styles.buttonTextPequeño2}>
-                      {item.activa == '1' ? 'Desactivar' : 'Activar'}
+                      {item.activa == '1' ? 'Desaprobar' : 'Aprobar'}
                   </Text>
                   </TouchableHighlight>
                   </View>

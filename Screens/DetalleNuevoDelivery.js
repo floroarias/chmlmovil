@@ -87,10 +87,12 @@ class DetalleNuevoDelivery extends React.Component {
         subidaIntentada: true,
       });
 
+      //console.log(this.state.imagenLogo.uri)
+
       uploadResponse = await this.uploadImageAsync(this.state.imagenLogo.uri);
       uploadResult = await uploadResponse.json();
       
-      //console.log(uploadResult);
+      console.log(uploadResult);
       if (uploadResult){
         if (uploadResult == 5){//Subida exitosa
           this.setState({
@@ -111,7 +113,7 @@ class DetalleNuevoDelivery extends React.Component {
       //console.log(uploadResponse);
       //console.log({ uploadResult });
       //console.log(e);
-      alert('Error en la carga. Asegúrese de estar conectado a internet y de que todos los datos estén cargados.');
+      alert('Error. Asegúrese de estar conectado a internet y de que todos los datos estén cargados.');
     } finally {
       this.setState({
         uploading: false
@@ -160,15 +162,15 @@ class DetalleNuevoDelivery extends React.Component {
       },
     };
 
-    //console.log('A PUNTO DE LLAMAR A LA API CON LAS SIG. OPCIONES:')
-    //console.log(options)
+    console.log('A PUNTO DE LLAMAR A LA API CON LAS SIG. OPCIONES:')
+    console.log(options)
     return await fetch(apiUrl, options);
   }
 
   validarDatos = () => {
     return (this.state.direccion.length > 0 && this.state.nombreComercio.length > 0 
       && this.state.imagenLogo && this.state.observaciones.length > 0 
-      && this.state.telefono.length > 0 && this.state.rubros.length > 0)
+      && this.state.telefono.length > 0 && this.state.value)
   }
 
   mostrarImagePicker = () => {

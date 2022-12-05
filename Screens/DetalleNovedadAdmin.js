@@ -40,22 +40,23 @@ class DetalleNovedadAdmin extends React.Component {
         uploading: true
       });
 
+      console.log(this.state.imagenNovedad.uri)
+
       uploadResponse = await this.uploadImageAsync(this.state.imagenNovedad.uri);
       uploadResult = await uploadResponse.json();
       
-      //console.log(uploadResult);
-      if (uploadResult){
-        if (uploadResult == 5){//Subida exitosa
-          this.setState({
-            resultadoSubida: true, //Subida correcta.
-            subidaIntentada: true, //Se realizó intento de subir la información.
-          })
-        }else{
-          this.setState({
-            resultadoSubida: false, //Subida incorrecta
-            subidaIntentada: true, //Se realizó intento de subir la información.
-          })
-        }
+      console.log(uploadResult);
+      
+      if (uploadResult && uploadResult == 5){//Subida exitosa
+        this.setState({
+          resultadoSubida: true, //Subida correcta.
+          subidaIntentada: true, //Se realizó intento de subir la información.
+        })
+      }else{
+        this.setState({
+          resultadoSubida: false, //Subida incorrecta
+          subidaIntentada: true, //Se realizó intento de subir la información.
+        })
       }
       //console.log({ uploadResult });
       //alert(uploadResult.stringify())
@@ -82,7 +83,7 @@ class DetalleNovedadAdmin extends React.Component {
     }
   
     let formData = new FormData();
-    
+
     formData.append('imagen', {
       uri,
       name: `novedadMobile.${fileType}`,
@@ -139,7 +140,7 @@ class DetalleNovedadAdmin extends React.Component {
       const permiso = await ImagePicker.requestCameraPermissionsAsync()
       let result = await ImagePicker.launchCameraAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
+        allowsEditing: false,
         aspect: [4, 3],
         quality: 0.3,
       });

@@ -40,6 +40,9 @@ class AdministracionNovedades extends React.Component {
   confirmarEliminacion = (novedad) => {
     let resultado = false
 
+    console.log('novedad')
+    console.log(novedad)
+
     Alert.alert(
       "Advertencia",
       "Está seguro de eliminar la novedad?",
@@ -68,11 +71,17 @@ class AdministracionNovedades extends React.Component {
       uploadResult = await uploadResponse.json();
       
       //console.log(uploadResult);
+      
       if (uploadResult && uploadResult == 5){
+        console.log(uploadResult);
+
         this.setState({
-          data: this.state.data.filter(item => item.idNovedad != novedad.idNovedad)
+          images: this.state.images.filter(item => item.idNovedad != novedad.idNovedad)
         });
+
         alert('La novedad se ha eliminado exitosamente.');
+      } else{
+        alert('Hubo un error al intentar eliminar la novedad.');
       }
       //console.log({ uploadResult });
       //alert(uploadResult.stringify())
@@ -92,9 +101,9 @@ class AdministracionNovedades extends React.Component {
     let apiUrl = 'https://chmlmobile.chosmalal.net.ar/novedades/eliminar_novedad.php';
     
     let formData = new FormData();
-    
+
     formData.append('novedad_id', novedad.idNovedad)
-    formData.append('nombre_imagen', novedad.nombreImagen)
+    //formData.append('nombre_imagen', novedad.nombreImagen)
     formData.append('id_usuario_admin', this.props.usuario.idUsuario)
     formData.append('jwt_usuario_admin', this.props.usuario.jwt)
   
@@ -107,8 +116,8 @@ class AdministracionNovedades extends React.Component {
       },
     };
 
-    //console.log('A PUNTO DE LLAMAR A LA API CON LAS SIG. OPCIONES:')
-    //console.log(options)
+    console.log('A PUNTO DE LLAMAR A LA API CON LAS SIG. OPCIONES:')
+    console.log(options)
     return await fetch(apiUrl, options);
   }
 
@@ -187,7 +196,7 @@ class AdministracionNovedades extends React.Component {
                   </View>
 
                   <View>{/* Botón de eliminar */}
-                    <TouchableHighlight style={[styles.button2, styles.facebook]} onPress={(item) => this._handleDelete(item)}>
+                    <TouchableHighlight style={[styles.button2, styles.facebook]} onPress={() => this.confirmarEliminacion(item)}>
                       <View style={styles.buttoncontent}>
                         <Image style={styles.buttonImage}
                           source={require('../assets/papelera.png')}

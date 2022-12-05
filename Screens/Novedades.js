@@ -97,7 +97,7 @@ export class Novedades extends React.Component {
                       marginLeft: 10,
                       }}>
                         {item.fecha ? ('Fecha: ' + item.fecha) : ''}
-                        {item.observaciones ? 'Comentarios: ' + item.observaciones + '\n' : ''}
+                        {item.observaciones ? '\n Comentarios: ' + item.observaciones + '\n' : ''}
                     </Text>
                   </View>
 
