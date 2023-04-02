@@ -1,6 +1,10 @@
 //Esta página de login es para que un usuario registrado en la BD pueda iniciar sesión.
 //También tiene un enlace para que el usuario no registrado pueda completar sus datos y registrarse,
 //y para que el usuario registrado que haya olvidado su contraseña, pueda recuperarla desde su correo.
+
+//login screen in node.js?
+
+
 import React from 'react';
 import { 
   StyleSheet, Text, View, TouchableOpacity, 
@@ -92,6 +96,14 @@ class Login extends React.Component {
           codigoEnviado: true,
         })
         alert('El correo se verificó correctamente. A continuación, ingrese el código enviado al mismo.');
+      }else{
+        this.setState({
+          cargando: false,
+          seIntentaVerificarMail: false,
+          respuestaServerMailExiste: false,
+          codigoEnviado: true,
+        })
+        alert('El correo se verificó correctamente. A continuación, ingrese el código enviado al mismo.');
       }
       //console.log({ uploadResult });
       //alert(uploadResult.stringify())
@@ -141,7 +153,9 @@ class Login extends React.Component {
       uploadResponse = await this.verificarCodigoAsync(mail, codigo);
       uploadResult = await uploadResponse.json();
 
-      //console.log(uploadResult);
+      console.log('Resultado ingreso de código: ');
+      console.log(uploadResult);
+
       if (uploadResult && uploadResult == 5){
         this.setState({
           cargando: false,
@@ -149,17 +163,26 @@ class Login extends React.Component {
           seIntentaVerificarCodigo: false,
         })
         alert('El código es correcto. A continuación, ingrese su nueva contraseña.');
+      }else{
+        this.setState({
+          cargando: false,
+          respuestaServerCodigoExiste: true,
+          seIntentaVerificarCodigo: false,
+        })
+        alert('El código no es correcto. Intente nuevamente.');
       }
       //console.log({ uploadResult });
       //alert(uploadResult.stringify())
     } catch (e) {
       //console.log(uploadResponse);
       //console.log({ uploadResult });
-      //console.log(e);
-      alert('Error. Asegúrese de estar conectado a internet y de que el código sea correcto.');
+      console.log(e);
+      alert('Error. Asegúrese de estar conectado a internet y que el código sea correcto.');
     } finally {
       this.setState({
-        cargando: false
+        cargando: false,
+        respuestaServerCodigoExiste: false,
+        seIntentaVerificarCodigo: false,
       });
     }
   }
@@ -197,7 +220,9 @@ class Login extends React.Component {
       uploadResponse = await this.cambiarPasswordAsync(mail, codigo, nuevaClave);
       uploadResult = await uploadResponse.json();
 
-      //console.log(uploadResult);
+      console.log('Intento de cambio de clave...');
+      console.log(uploadResult);
+      
       if (uploadResult && uploadResult == 5){
         this.setState({
           cargando: false,
@@ -205,6 +230,8 @@ class Login extends React.Component {
           seIntentaCambiarPassword: false,
         })
         alert('El cambio de clave ha sido exitoso. A continuación, inicie sesión.');
+      }else{
+        alert('No pudo realizarse el cambio de clave. Intente nuevamente.');
       }
       //console.log({ uploadResult });
       //alert(uploadResult.stringify())
@@ -226,7 +253,7 @@ class Login extends React.Component {
       return 0
     }
 
-    if (this.state.passwordNuevo1.length > 3){
+    if (this.state.passwordNuevo1.length < 3){
       alert('La clave es muy corta. Ingrese al menos 4 caracteres.')
       return 0
     }
@@ -321,7 +348,7 @@ class Login extends React.Component {
             </View>
             </TouchableHighlight>
 
-            <TouchableHighlight style={[styles.button, styles.facebook]} onPress={() => this.verificarMail(this.state.mail)}>
+            {/* <TouchableHighlight style={[styles.button, styles.facebook]} onPress={() => this.verificarMail(this.state.mail)}>
             <View style={styles.buttoncontent}>
               <Image style={styles.buttonImage}
                 source={require('../assets/olvido_pass.png')}
@@ -330,7 +357,7 @@ class Login extends React.Component {
                 Olvidé mi Contraseña
               </Text>
             </View>
-            </TouchableHighlight>
+            </TouchableHighlight> */}
 
           </View>
     )
@@ -390,7 +417,7 @@ class Login extends React.Component {
 
             </KeyboardAvoidingView>
             
-            <TouchableHighlight style={[styles.button, styles.facebook]} onPress={() => {this.cambiarPassword(this.state.mail, this.state.codigo, this.state.passwordNuevo1)}}>
+            <TouchableHighlight style={[styles.button, styles.facebook]} onPress={this.cambiarPassword(this.state.mail, this.state.codigo, this.state.passwordNuevo1)}>
             <View style={styles.buttoncontent}>
               <Image style={styles.buttonImage}
                 source={require('../assets/cambio_password.png')}
@@ -414,14 +441,14 @@ class Login extends React.Component {
           <KeyboardAvoidingView keyboardVerticalOffset = {120} behavior="padding">
 
             <View style={styles.inputContainer}>
-              <Ionicons name={'ios-mail'} size={28} color={'rgba(255, 255, 255, 0.7)'}
+              <Ionicons name={'key'} size={28} color={'rgba(255, 255, 255, 0.7)'}
                 style={styles.inputIcon} />
 
               <TextInput
                 onChangeText={(codigo) => this.setState({codigo})}
                 style = {styles.input}
-                placeholder = {'Mail'} 
-                ref='mail'
+                placeholder = {'Codigo'} 
+                ref='codigo'
                 returnKeyType='next'
                 placeholderTextColor = {'rgba(255, 255, 255, 0.7)'}
                 underlineColorAndroid = 'transparent'
@@ -431,7 +458,7 @@ class Login extends React.Component {
 
             </KeyboardAvoidingView>
 
-            <TouchableHighlight style={[styles.button, styles.facebook]} onPress={() => this.verificarCodigo(this.state.mail, this.state.codigo)}>
+            <TouchableHighlight style={[styles.button, styles.facebook]} onPress={this.verificarCodigo(this.state.mail, this.state.codigo)}>
             <View style={styles.buttoncontent}>
               <Image style={styles.buttonImage}
                 source={require('../assets/cambio_password.png')}
@@ -538,12 +565,12 @@ class Login extends React.Component {
           </View>
         
         </View>
-    } else if (respuestaServerCambiarPassword){
+    } else if (this.state.respuestaServerCambiarPassword){
       pantalla = this.pantallaLoginComun()
-    } else if (respuestaServerCodigoExiste){
+    } else if (this.state.respuestaServerCodigoExiste){
       //Pantalla de ingresar nueva clave.
       pantalla = this.pantallaIngresoNuevaClave()
-    } else if (respuestaServerMailExiste){
+    } else if (this.state.respuestaServerMailExiste){
       //Pantalla de ingresar codigo.
       pantalla = this.pantallaIngresoCodigo()
     }else{
