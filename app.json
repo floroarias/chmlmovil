@@ -2,11 +2,14 @@
   "expo": {
     "name": "CHML Mobile",
     "icon": "./assets/chml_azul.png",
-    "version": "3.0.0",
+    "version": "3.0.1",
     "slug": "CHMLMobile",
     "android": {
       "package": "com.munichos.chmlmobile",
-      "versionCode": 14
+      "versionCode": 16,
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "plugins": [
       [
@@ -34,6 +37,11 @@
     ],
     "platforms": [
       "android"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "082e8ec0-4860-11e9-8c8e-e7a92c53d269"
+      }
+    }
   }
 }
