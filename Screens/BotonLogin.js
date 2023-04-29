@@ -8,7 +8,7 @@ class BotonLogin extends React.Component {
         <TouchableHighlight onPress = {() => this.props.nav.navigate('Login')}>
           <View>
             <Image style={{width: 40, height: 40, marginRight: 10}}
-              source= {this.props.usuarioRegistrado ? require('../assets/logueado.png') : require('../assets/avatar.png')}
+              source= {this.props.usuarioRegistrado ? require('../assets/logueado2.png') : require('../assets/avatar.png')}
             />
           </View>
         </TouchableHighlight>

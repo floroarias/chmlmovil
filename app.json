@@ -2,20 +2,21 @@
   "expo": {
     "name": "CHML Mobile",
     "icon": "./assets/chml_azul.png",
-    "version": "3.0.1",
+    "version": "3.0.2",
     "slug": "CHMLMobile",
     "android": {
       "package": "com.munichos.chmlmobile",
-      "versionCode": 16,
+      "versionCode": 17,
       "permissions": [
-        "android.permission.RECORD_AUDIO"
+        ["ACCESS_FINE_LOCATION" ]
       ]
     },
     "plugins": [
       [
         "expo-image-picker",
         {
-          "photosPermission": "CHML Mobile desea acceder a tus fotos."
+          "photosPermission": "CHML Mobile desea acceder a tus fotos.",
+          "cameraPermission": "CHML Mobile desea acceder a tu cámara."
         }
       ]
     ],
